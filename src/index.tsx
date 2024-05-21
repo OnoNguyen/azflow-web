@@ -4,9 +4,9 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import ApolloAppProvider from "./ApolloAppProvider";
-import { Layout } from "./component/Layout";
 import { AppRoutes } from "./component/AppRoutes";
 import GlobalStyle from "./component/GlobalStyle";
+import { Layout } from "./component/Layout";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,

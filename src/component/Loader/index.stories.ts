@@ -11,6 +11,16 @@ const meta = {
 } satisfies Meta<typeof Loader>;
 
 export default meta;
-type Story = StoryObj<typeof Loader>;
+type Story = StoryObj<typeof meta>;
 
-export const ArrowSpinner: Story = {};
+export const ArrowSpinner: Story = {
+  args: {
+    type: "arrow",
+  },
+};
+
+export const GradientSpinner: Story = {
+  args: {
+    type: "gradient",
+  },
+};
