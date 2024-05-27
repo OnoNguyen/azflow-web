@@ -1,8 +1,7 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
 import {Link} from "react-router-dom";
-import {gql, useQuery} from '@apollo/client';
+import {gql, useQuery} from "@apollo/client";
 import {__DEV__} from "@apollo/client/utilities/globals";
 import {loadDevMessages, loadErrorMessages} from "@apollo/client/dev";
 
@@ -29,24 +28,28 @@ const App = () => {
 
     if (loading) return <p>Loading...</p>;
     if (error) {
-        console.log('theres an error', error);
+        console.log("theres an error", error);
         return <p>Error :(</p>;
     }
 
-    console.log(data);
-
-    return (<div className="App">
-        <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo"/>
-            <Link to="/freemind" color="gold">A Free Mind Has Humility</Link>
-        </header>
-        <div>
-            {data.todos.map((todo: any, index: number) => <div key={index}>
-                <p>{todo.text}</p>
-                <p>{todo.user.name}</p>
-            </div>)}
+    return (
+        <div className="App">
+            <header className="App-header">
+                <img src={logo} className="App-logo" alt="logo"/>
+                <Link to="/freemind" color="gold">
+                    A Free Mind Has Humility
+                </Link>
+            </header>
+            <div>
+                {data.todos.map((todo: any, index: number) => (
+                    <div key={index}>
+                        <p>{todo.text}</p>
+                        <p>{todo.user.name}</p>
+                    </div>
+                ))}
+            </div>
         </div>
-    </div>);
+    );
 };
 
 export default App;
