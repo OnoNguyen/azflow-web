@@ -1,16 +1,13 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
-  @media (min-width: 40em) {
-    display: grid;
-    grid-gap: 1em;
-    grid-template-areas:
-      "header header header"
-      "nav main main"
-      "footer footer footer";
-    grid-template-rows: auto 1fr auto;
-    min-height: 100vh;
-  }
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "nav main main"
+    "footer footer footer";
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
 `;
 
 export const Main = styled.div`
@@ -20,8 +17,10 @@ export const Main = styled.div`
 
 export const Nav = styled.div`
   padding: 1em;
-  background: gold;
   grid-area: nav;
+  border-right: 1px solid #ddd;
+  max-width: 200px;
+  min-width: 50px;
 `;
 
 export const NavList = styled.ul`
@@ -48,11 +47,14 @@ export const NavList = styled.ul`
 `;
 
 export const HeaderBar = styled.div`
+  display: flex;
+  gap: 1em;
   padding: 0.5em 1em;
   height: 64px;
   align-items: center;
-  background-color: pink;
   grid-area: header;
+  border-bottom: 1px solid #ddd;
+  justify-content: space-between;
 `;
 
 export const LogoText = styled.h1`
@@ -63,7 +65,6 @@ export const LogoText = styled.h1`
 
 export const Footer = styled.div`
   padding: 1em;
-  background: #333;
-  color: white;
   grid-area: footer;
+  border-top: 1px solid #ddd;
 `;
