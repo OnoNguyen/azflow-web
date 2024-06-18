@@ -23,21 +23,33 @@ export const Layout = ({ children }) => {
       <Nav>
         <NavList>
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/">
+              <span className="material-symbols-outlined">home</span>
+              <span>Home</span>
+            </Link>
           </li>
           <li>
-            <Link to="/freemind">FreeMind</Link>
+            <Link to="/freemind">
+              <span className="material-symbols-outlined">person</span>
+              <span>You</span>
+            </Link>
           </li>
           <li>
-            <Link to="/login">Login</Link>
+            <Link to="/login">
+              <span className="material-symbols-outlined">group</span>
+              <span>Them</span>
+            </Link>
           </li>
           <li>
-            <Link to="/signup">Sign Up</Link>
+            <Link to="/signup">
+              <span className="material-symbols-outlined">manage_accounts</span>
+              <span>Profile</span>
+            </Link>
           </li>
         </NavList>
       </Nav>
       <Main>{children}</Main>
-      <Footer>This is footer</Footer>
+      <Footer>AzFlow inc</Footer>
     </Wrapper>
   );
 };

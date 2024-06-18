@@ -34,6 +34,20 @@ export const NavList = styled.ul`
     text-decoration: none;
     font-weight: bold;
     font-size: 1.1em;
+    display: flex;
+    gap: 0.4em;
+
+    .material-symbols-outlined {
+      margin-top: 0.2em;
+    }
+
+    @media (max-width: 600px) {
+      :nth-child(2) {
+        display: none;
+      }
+
+      justify-content: center;
+    }
   }
 
   a:visited {

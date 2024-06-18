@@ -1,3 +1,5 @@
+// TODO: this looks like an interesting pattern so leave it here until July
+
 // import { useIsAuthenticated, useMsal } from "@azure/msal-react";
 //
 // const AuthProvider: FC = ({ children }) => {

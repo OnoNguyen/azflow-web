@@ -1,10 +1,9 @@
-import { Button } from "../component/Button";
+import HlsMediaPlayer from "../component/VideoPlayer";
 
 export const Home = () => {
   return (
     <div>
-      <p>This is the initial homepage</p>
-      <Button>Click me!</Button>
+      <HlsMediaPlayer />
     </div>
   );
 };

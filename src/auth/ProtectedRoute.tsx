@@ -1,3 +1,5 @@
+// TODO: this looks like an interesting pattern so leave it here until July
+
 // import { Redirect, Route } from "react-router-dom";
 // import { useIsAuthenticated } from "@azure/msal-react";
 //
