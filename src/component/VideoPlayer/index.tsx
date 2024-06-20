@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import Hls from "hls.js";
 import { StyledVideo, VideoContainer } from "./style.ts";
 
-const HlsMediaPlayer: React.FC = () => {
+const HlsVideoPlayer: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoSrc = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8";
 
@@ -29,4 +29,4 @@ const HlsMediaPlayer: React.FC = () => {
   );
 };
 
-export default HlsMediaPlayer;
+export default HlsVideoPlayer;

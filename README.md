@@ -17,13 +17,13 @@ If you are developing a production application, we recommend updating the config
 
 ```js
 export default {
-    // other rules...
-    parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        project: ['./tsconfig.json', './tsconfig.node.json'],
-        tsconfigRootDir: __dirname,
-    },
+  // other rules...
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+  },
 }
 ```
 
@@ -36,3 +36,4 @@ export default {
 
 - Vite Bundler
 - MS Entra for Auth
+- hls.js for media streaming

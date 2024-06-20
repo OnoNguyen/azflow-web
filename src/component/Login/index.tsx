@@ -11,7 +11,7 @@ export const Login = () => {
   const { data } = useQuery(IS_LOGGED_IN);
 
   const handleLogin = () => {
-    instance.acquireTokenPopup(loginRequest).then((response) => {
+    instance.loginPopup(loginRequest).then((response) => {
       console.log(response);
       toggleLoggedIn({ variables: { status: true } }).then((r) => r);
     });
