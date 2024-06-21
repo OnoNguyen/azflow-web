@@ -30,7 +30,9 @@ const linkChain = createPersistedQueryLink({
   )
   .concat(authLink);
 
-export const isLoggedInVar = makeVar(false);
+export const isLoggedInVar = makeVar<boolean>(
+  !!localStorage.getItem("isLoggedIn"),
+);
 
 const client = new ApolloClient({
   cache: new InMemoryCache({
@@ -39,7 +41,6 @@ const client = new ApolloClient({
         fields: {
           isLoggedIn: {
             read() {
-              // return !!localStorage.getItem("msal.account.keys");
               return isLoggedInVar();
             },
           },
@@ -51,7 +52,12 @@ const client = new ApolloClient({
     Mutation: {
       toggleLoggedIn: (_, { status }) => {
         isLoggedInVar(status);
-        return null;
+        if (status) {
+          localStorage.setItem("isLoggedIn", "true");
+        } else {
+          localStorage.removeItem("isLoggedIn");
+        }
+        return status;
       },
     },
   },
@@ -61,7 +67,6 @@ const client = new ApolloClient({
 
 // @ts-ignore
 const ApolloAppProvider = ({ children }) => {
-  console.log("api url", import.meta.env.VITE_API_URL);
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
 export default ApolloAppProvider;

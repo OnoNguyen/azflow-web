@@ -1,30 +1,27 @@
 import { useMsal } from "@azure/msal-react";
 import { LoginButton } from "./style.ts";
-import { IS_LOGGED_IN, TOGGLE_LOGGED_IN } from "../../graphql/localQueries.ts";
-import { useMutation, useQuery } from "@apollo/client";
 import { loginRequest } from "../../auth/authConfig.ts";
 
 export const Login = () => {
-  const { instance } = useMsal();
+  const { instance, accounts } = useMsal();
 
-  const [toggleLoggedIn] = useMutation(TOGGLE_LOGGED_IN);
-  const { data } = useQuery(IS_LOGGED_IN);
+  const isLoggedIn = accounts.length > 0;
 
   const handleLogin = () => {
-    instance.loginPopup(loginRequest).then((response) => {
-      console.log(response);
-      toggleLoggedIn({ variables: { status: true } }).then((r) => r);
-    });
+    if (isLoggedIn) {
+      return;
+    }
+    instance.loginRedirect(loginRequest).then(() => {});
   };
 
   const handleLogout = () => {
-    instance.logout().then((response) => {
-      console.log(response);
-      toggleLoggedIn({ variables: { status: false } }).then((r) => r);
-    });
+    if (!isLoggedIn) {
+      return;
+    }
+    instance.logoutRedirect().then(() => {});
   };
 
-  return data.isLoggedIn ? (
+  return isLoggedIn ? (
     <LoginButton onClick={handleLogout}>Log Out</LoginButton>
   ) : (
     <LoginButton onClick={handleLogin}>Log in</LoginButton>
