@@ -1,27 +1,15 @@
-import { useMsal } from "@azure/msal-react";
-import { LoginButton } from "./style.ts";
-import { loginRequest } from "../../auth/authConfig.ts";
+import { LoginButton } from "./style";
+import { useAuth } from "@/auth/useAuth";
+import { Loader } from "@/component/Loader";
 
 export const Login = () => {
-  const { instance, accounts } = useMsal();
+  const { isAuthed, handleLogin, handleLogout, loading } = useAuth();
 
-  const isLoggedIn = accounts.length > 0;
+  if (loading) {
+    return <Loader />;
+  }
 
-  const handleLogin = () => {
-    if (isLoggedIn) {
-      return;
-    }
-    instance.loginRedirect(loginRequest).then(() => {});
-  };
-
-  const handleLogout = () => {
-    if (!isLoggedIn) {
-      return;
-    }
-    instance.logoutRedirect().then(() => {});
-  };
-
-  return isLoggedIn ? (
+  return isAuthed ? (
     <LoginButton onClick={handleLogout}>Log Out</LoginButton>
   ) : (
     <LoginButton onClick={handleLogin}>Log in</LoginButton>

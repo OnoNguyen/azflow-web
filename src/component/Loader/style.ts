@@ -28,9 +28,9 @@ export const GradientSpinner = styled.div`
 `;
 
 export const ArrowSpinner = styled.div`
-  width: 50px;
-  height: 50px;
-  border: 5px solid #ccc;
+  width: 2em;
+  height: 2em;
+  border: 0.2em solid #ccc;
   border-top-color: #3498db;
   border-radius: 50%;
   position: relative;
@@ -44,9 +44,9 @@ export const ArrowSpinner = styled.div`
     transform: rotate(140deg);
     width: 0;
     height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 15px solid #3498db;
+    border-left: 0.2em solid transparent;
+    border-right: 0.2em solid transparent;
+    border-bottom: 0.3em solid #3498db;
   }
 
   @keyframes spin {

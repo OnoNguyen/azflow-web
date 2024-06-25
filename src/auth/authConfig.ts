@@ -25,4 +25,9 @@ const loginRequest = {
   scopes: ["User.Read"],
 };
 
-export { msalConfig, loginRequest };
+const logoutRequest = {
+  postLogoutRedirectUri:
+    window.location.pathname === "/create" ? "/" : window.location.href,
+};
+
+export { msalConfig, loginRequest, logoutRequest };

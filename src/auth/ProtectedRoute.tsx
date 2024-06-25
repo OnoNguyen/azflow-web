@@ -1,19 +1,25 @@
-// TODO: this looks like an interesting pattern so leave it here until July
+import { Outlet } from "react-router-dom";
+import { useAuth } from "@/auth/useAuth.tsx";
+import { Loader } from "@/component/Loader";
+import { useEffect, useState } from "react";
 
-// import { Redirect, Route } from "react-router-dom";
-// import { useIsAuthenticated } from "@azure/msal-react";
-//
-// const ProtectedRoute = ({ component: Component, ...rest }) => {
-//   const isAuthenticated = useIsAuthenticated();
-//
-//   return (
-//     <Route
-//       {...rest}
-//       render={(props) =>
-//         isAuthenticated ? <Component {...props} /> : <Redirect to="/login" />
-//       }
-//     />
-//   );
-// };
-//
-// export default ProtectedRoute;
+const ProtectedRoute = () => {
+  const { isAuthed, handleLogin } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isAuthed) {
+      handleLogin().then(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
+  }, [isAuthed, handleLogin]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  return <Outlet />;
+};
+
+export default ProtectedRoute;

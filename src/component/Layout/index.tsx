@@ -7,17 +7,18 @@ import {
   NavList,
   Wrapper,
 } from "./style";
-import { Link } from "react-router-dom";
-import { Search } from "../Search";
-import { Login } from "../Login"; // @ts-ignore
+import { Link, Outlet } from "react-router-dom";
+import { CreateButtonWrapper } from "@/component/Create";
+import { Search } from "@/component/Search";
+import { Login } from "@/component/Login";
 
-// @ts-ignore
-export const Layout = ({ children }) => {
+export const PrimaryLayout = () => {
   return (
     <Wrapper>
       <HeaderBar>
         <LogoText>AzFlow</LogoText>
         <Search />
+        <CreateButtonWrapper />
         <Login />
       </HeaderBar>
       <Nav>
@@ -48,7 +49,52 @@ export const Layout = ({ children }) => {
           </li>
         </NavList>
       </Nav>
-      <Main>{children}</Main>
+      <Main>
+        <Outlet />
+      </Main>
+      <Footer>AzFlow inc</Footer>
+    </Wrapper>
+  );
+};
+
+export const StudioLayout = () => {
+  return (
+    <Wrapper>
+      <HeaderBar>
+        <LogoText>AzFlow</LogoText>
+        <Login />
+      </HeaderBar>
+      <Nav>
+        <NavList>
+          <li>
+            <Link to="/">
+              <span className="material-symbols-outlined">home</span>
+              <span>Home</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/freemind">
+              <span className="material-symbols-outlined">person</span>
+              <span>You</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/login">
+              <span className="material-symbols-outlined">group</span>
+              <span>Them</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/signup">
+              <span className="material-symbols-outlined">manage_accounts</span>
+              <span>Profile</span>
+            </Link>
+          </li>
+        </NavList>
+      </Nav>
+      <Main>
+        <Outlet />
+      </Main>
       <Footer>AzFlow inc</Footer>
     </Wrapper>
   );

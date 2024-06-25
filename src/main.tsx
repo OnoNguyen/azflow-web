@@ -2,9 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import ApolloAppProvider from "./graphql/ApolloAppProvider.tsx";
-import GlobalStyle from "./component/GlobalStyle.tsx";
+import GlobalStyle from "./GlobalStyle.ts";
 import { BrowserRouter } from "react-router-dom";
-import { Layout } from "./component/Layout";
 import { AppRoutes } from "./component/AppRoutes.tsx";
 import { msalConfig } from "./auth/authConfig.ts";
 import { PublicClientApplication } from "@azure/msal-browser";
@@ -18,9 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <MsalProvider instance={msalInstance}>
         <BrowserRouter>
-          <Layout>
-            <AppRoutes />
-          </Layout>
+          <AppRoutes />
         </BrowserRouter>
       </MsalProvider>
     </React.StrictMode>
