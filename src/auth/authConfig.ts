@@ -1,4 +1,9 @@
-import { Configuration, LogLevel } from "@azure/msal-browser";
+import {
+  Configuration,
+  EndSessionRequest,
+  LogLevel,
+  RedirectRequest,
+} from "@azure/msal-browser";
 
 const msalConfig: Configuration = {
   auth: {
@@ -12,20 +17,18 @@ const msalConfig: Configuration = {
   },
   system: {
     loggerOptions: {
-      loggerCallback(_, message) {
-        console.log(message);
-      },
+      loggerCallback() {},
       piiLoggingEnabled: false,
       logLevel: LogLevel.Info,
     },
   },
 };
 
-const loginRequest = {
+const loginRequest: RedirectRequest = {
   scopes: ["User.Read"],
 };
 
-const logoutRequest = {
+const logoutRequest: EndSessionRequest = {
   postLogoutRedirectUri:
     window.location.pathname === "/create" ? "/" : window.location.href,
 };

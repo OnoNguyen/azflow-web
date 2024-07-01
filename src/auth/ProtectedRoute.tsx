@@ -1,19 +1,14 @@
 import { Outlet } from "react-router-dom";
 import { useAuth } from "@/auth/useAuth.tsx";
 import { Loader } from "@/component/Loader";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const ProtectedRoute = () => {
-  const { isAuthed, handleLogin } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const { loading, isAuthed, handleLogin } = useAuth();
 
   useEffect(() => {
-    if (!isAuthed) {
-      handleLogin().then(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
-  }, [isAuthed, handleLogin]);
+    !isAuthed && !loading && handleLogin();
+  }, [loading, isAuthed, handleLogin]);
 
   if (loading) {
     return <Loader />;

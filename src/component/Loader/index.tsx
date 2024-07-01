@@ -1,11 +1,10 @@
-import React from "react";
-import { ArrowSpinner, GradientSpinner } from "./style"; // TODO: add spinner type
+import { ArrowSpinner, GradientSpinner } from "./style";
 
-interface LoaderProps {
+interface ILoaderProps {
   type?: "arrow" | "gradient";
 }
 
-export function Loader({ type = "arrow" }: LoaderProps) {
+export function Loader({ type = "arrow" }: ILoaderProps) {
   if (type === "arrow") {
     return <ArrowSpinner />;
   }

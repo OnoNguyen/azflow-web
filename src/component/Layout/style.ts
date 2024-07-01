@@ -3,9 +3,9 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
   display: grid;
   grid-template-areas:
-    "header header header"
-    "nav main main"
-    "footer footer footer";
+    "header header header header"
+    "nav main main main"
+    "footer footer footer footer";
   grid-template-rows: auto 1fr auto;
   min-height: 100vh;
 `;
@@ -19,7 +19,6 @@ export const Nav = styled.div`
   padding: 1em;
   grid-area: nav;
   border-right: 1px solid #ddd;
-  max-width: 200px;
   min-width: 50px;
 `;
 

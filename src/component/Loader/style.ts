@@ -33,8 +33,8 @@ export const ArrowSpinner = styled.div`
   border: 0.2em solid #ccc;
   border-top-color: #3498db;
   border-radius: 50%;
-  position: relative;
   animation: spin 1s infinite linear;
+  position: relative;
 
   &:before {
     content: "";
