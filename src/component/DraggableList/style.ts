@@ -3,7 +3,6 @@ import styled, { css } from "styled-components";
 export const List = styled.ul.withConfig({ displayName: "List" })`
   list-style: none;
   padding: 0;
-  width: 300px;
 `;
 
 export const highlightStyles = css`

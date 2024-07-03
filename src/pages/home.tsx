@@ -2,7 +2,6 @@
 //
 
 import { DraggableList } from "@/component/DraggableList";
-import AudioPlayer from "@/component/AudioPlayer";
 
 export const Home = () => {
   // const GET_TRACK = gql`
@@ -17,9 +16,39 @@ export const Home = () => {
   // if (error) return <p>Error :(</p>;
 
   const items = [
-    <AudioPlayer src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />,
-    <AudioPlayer src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" />,
-    <AudioPlayer src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" />,
+    {
+      key: "1",
+      content: (
+        <audio controls>
+          <source
+            src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+            type="audio/mp3"
+          />
+        </audio>
+      ),
+    },
+    {
+      key: "2",
+      content: (
+        <audio controls>
+          <source
+            src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+            type="audio/mp3"
+          />
+        </audio>
+      ),
+    },
+    {
+      key: "3",
+      content: (
+        <audio controls>
+          <source
+            src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+            type="audio/mp3"
+          />
+        </audio>
+      ),
+    },
   ];
 
   const simpleItems = [<div>Item 1</div>, <div>Item 2</div>, <div>Item 3</div>];
@@ -27,7 +56,7 @@ export const Home = () => {
   return (
     <div>
       <DraggableList items={items} />
-      <DraggableList items={simpleItems} />
+      {/*<DraggableList items={simpleItems} />*/}
     </div>
   );
 };
