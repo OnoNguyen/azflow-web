@@ -1,62 +1,56 @@
-// import { gql } from "@apollo/client";
-//
+import { DraggableList, DraggableListItem } from "@/component/DraggableList";
+import { useEffect, useState } from "react";
+import { gql, useMutation } from "@apollo/client";
+import { Loader } from "@/component/Loader";
+import { ErrorNotification } from "@/component/Error";
+import { useAuth } from "@/auth/useAuth.tsx";
+import AudioPlayer from "@/component/AudioPlayer";
 
-import { DraggableList } from "@/component/DraggableList";
+const GET_TRACKS = gql`
+  mutation getTrackUrls($userId: String!) {
+    trackUrls(input: { userId: $userId })
+  }
+`;
 
 export const Home = () => {
-  // const GET_TRACK = gql`
-  //   query getTrack {
-  //     trackUrl
-  //   }
-  // `;
-  //
-  // const { loading, error, data } = useQuery(GET_TRACK);
-  //
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error :(</p>;
+  const [items, setItems] = useState<DraggableListItem[]>([]);
+  const { currentUser } = useAuth();
 
-  const items = [
-    {
-      key: "1",
-      content: (
-        <audio controls>
-          <source
-            src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-            type="audio/mp3"
-          />
-        </audio>
-      ),
-    },
-    {
-      key: "2",
-      content: (
-        <audio controls>
-          <source
-            src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
-            type="audio/mp3"
-          />
-        </audio>
-      ),
-    },
-    {
-      key: "3",
-      content: (
-        <audio controls>
-          <source
-            src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
-            type="audio/mp3"
-          />
-        </audio>
-      ),
-    },
-  ];
+  const [trackUrls, { loading, error, data }] = useMutation(GET_TRACKS);
 
-  const simpleItems = [<div>Item 1</div>, <div>Item 2</div>, <div>Item 3</div>];
+  useEffect(() => {
+    if (!currentUser) return;
+    const userId = currentUser.localAccountId;
+    trackUrls({ variables: { userId: userId } }).catch((e) => console.error(e));
+  }, [currentUser, trackUrls]);
+
+  useEffect(() => {
+    if (data) {
+      const draggableItems = data.trackUrls.map((url: string) => ({
+        key: url,
+        content: <AudioPlayer src={url} />,
+      }));
+      setItems(draggableItems);
+    }
+  }, [data]);
+
+  if (!currentUser)
+    return (
+      <div>
+        You are not authenticated. Please <a href="/login">login</a>
+      </div>
+    );
+
+  if (loading) return <Loader />;
+  if (error) return <ErrorNotification />;
+
+  const handleUpdate = (updatedItems: DraggableListItem[]) => {
+    setItems(updatedItems); // Update the state with the new order
+  };
 
   return (
     <div>
-      <DraggableList items={items} />
-      {/*<DraggableList items={simpleItems} />*/}
+      <DraggableList items={items} onUpdate={handleUpdate} />
     </div>
   );
 };

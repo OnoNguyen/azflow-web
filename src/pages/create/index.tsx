@@ -2,7 +2,7 @@ import TextEditor from "@/component/Editor";
 import { gql, useMutation } from "@apollo/client";
 import { Loader } from "@/component/Loader";
 import { ErrorNotification } from "@/component/Error";
-import { useMsal } from "@azure/msal-react";
+import { useAuth } from "@/auth/useAuth.tsx";
 
 export const CreateEditor = () => {
   const TTS = gql`
@@ -11,11 +11,10 @@ export const CreateEditor = () => {
     }
   `;
   const [tts, { loading, error, data }] = useMutation(TTS);
-  const { accounts } = useMsal();
-  const currentUser = accounts[0];
+  const { currentUser } = useAuth();
 
   const handleSave = (content) => {
-    const userId = currentUser.localAccountId;
+    const userId = currentUser?.localAccountId;
 
     tts({ variables: { content: content, voice: "", userId: userId } }).catch(
       (e) => console.error("tts error:", e),

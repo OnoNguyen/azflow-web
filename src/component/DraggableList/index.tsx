@@ -1,17 +1,19 @@
-import React, { useRef, useState } from "react";
+import React, { ReactElement, useRef, useState } from "react";
 import { List, ListItem } from "./style";
 
-type DraggableListItem = {
+export type DraggableListItem = {
   key: string;
-  content: React.ReactNode;
+  content: ReactElement;
 };
 
 type DraggableListProps = {
   items: DraggableListItem[];
+  onUpdate: (updatedItems: DraggableListItem[]) => void;
 };
 
 export const DraggableList: React.FC<DraggableListProps> = ({
   items: initialItems,
+  onUpdate,
 }) => {
   const [items, setItems] = useState<DraggableListItem[]>(initialItems);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -41,6 +43,7 @@ export const DraggableList: React.FC<DraggableListProps> = ({
     const [draggedItem] = newItems.splice(draggedItemIndex.current, 1);
     newItems.splice(index, 0, draggedItem);
     setItems(newItems);
+    onUpdate(newItems); // Call the callback with the updated list
     draggedItemIndex.current = null;
     setDragOverIndex(null);
   };

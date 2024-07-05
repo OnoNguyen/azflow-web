@@ -3,7 +3,7 @@ import { useState } from "react";
 import { loginRequest, logoutRequest } from "@/auth/authConfig";
 
 export const useAuth = () => {
-  const { instance } = useMsal();
+  const { instance, accounts } = useMsal();
   const isAuthenticated = useIsAuthenticated();
   const [loading, setLoading] = useState(false);
 
@@ -29,5 +29,13 @@ export const useAuth = () => {
     }
   };
 
-  return { isAuthed: isAuthenticated, handleLogin, handleLogout, loading };
+  const currentUser = accounts[0]; // Get the current user
+
+  return {
+    isAuthed: isAuthenticated,
+    handleLogin,
+    handleLogout,
+    loading,
+    currentUser,
+  };
 };
