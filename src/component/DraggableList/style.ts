@@ -10,7 +10,7 @@ export const highlightStyles = css`
   border-color: #0056b3;
 `;
 
-export const ListItem = styled.li<{ isDraggedOver: boolean }>`
+export const ListItem = styled.li<{ $isDraggedOver: boolean }>`
   padding: 10px;
   margin: 5px 0;
   background-color: #f3f3f3;
@@ -18,5 +18,5 @@ export const ListItem = styled.li<{ isDraggedOver: boolean }>`
   border-radius: 4px;
   cursor: grab;
 
-  ${({ isDraggedOver }) => isDraggedOver && highlightStyles}
+  ${({ $isDraggedOver }) => $isDraggedOver && highlightStyles}
 `;

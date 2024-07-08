@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useState } from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import { List, ListItem } from "./style";
 
 export type DraggableListItem = {
@@ -7,17 +7,22 @@ export type DraggableListItem = {
 };
 
 type DraggableListProps = {
-  items: DraggableListItem[];
+  initialItems: DraggableListItem[];
   onUpdate: (updatedItems: DraggableListItem[]) => void;
 };
 
 export const DraggableList: React.FC<DraggableListProps> = ({
-  items: initialItems,
+  initialItems,
   onUpdate,
 }) => {
   const [items, setItems] = useState<DraggableListItem[]>(initialItems);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const draggedItemIndex = useRef<number | null>(null);
+
+  useEffect(() => {
+    setItems(initialItems); // Call the callback with the initial list
+    console.log("DraggableList items:", initialItems);
+  }, [initialItems]);
 
   const onDragStart =
     (index: number) => (event: React.DragEvent<HTMLLIElement>) => {
@@ -48,13 +53,15 @@ export const DraggableList: React.FC<DraggableListProps> = ({
     setDragOverIndex(null);
   };
 
-  return (
+  return items.length === 0 ? (
+    <p>No items to show</p>
+  ) : (
     <List>
       {items.map((item, index) => (
         <ListItem
           key={item.key}
           draggable
-          isDraggedOver={index === dragOverIndex}
+          $isDraggedOver={index === dragOverIndex}
           onDragStart={onDragStart(index)}
           onDragOver={onDragOver(index)}
           onDragLeave={onDragLeave}
