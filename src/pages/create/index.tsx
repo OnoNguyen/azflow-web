@@ -5,12 +5,12 @@ import { ErrorNotification } from "@/component/Error";
 import { useAuth } from "@/auth/useAuth.tsx";
 
 export const CreateEditor = () => {
-  const TTS = gql`
-    mutation tts($content: String!, $voice: String!, $userId: String!) {
-      tts(input: { text: $content, voice: $voice, userId: $userId })
+  const CREATE_AUDIO = gql`
+    mutation createAudio($content: String!, $voice: String!, $userId: String!) {
+      createAudio(input: { text: $content, voice: $voice, userId: $userId })
     }
   `;
-  const [tts, { loading, error, data }] = useMutation(TTS);
+  const [tts, { loading, error, data }] = useMutation(CREATE_AUDIO);
   const { currentUser } = useAuth();
 
   const handleSave = (content) => {
