@@ -25,12 +25,19 @@ const msalConfig: Configuration = {
 };
 
 const loginRequest: RedirectRequest = {
-  scopes: ["User.Read"],
+  scopes: [
+    "openid",
+    "profile",
+    "User.Read",
+    "api://6e0b3673-67ab-46e0-b0d2-40480f1acc6d/AzFlow.ReadWrite",
+  ],
 };
 
 const logoutRequest: EndSessionRequest = {
-  postLogoutRedirectUri:
-    window.location.pathname === "/create" ? "/" : window.location.href,
+  postLogoutRedirectUri: "/",
+  onRedirectNavigate: () => {
+    return true;
+  },
 };
 
 export { msalConfig, loginRequest, logoutRequest };

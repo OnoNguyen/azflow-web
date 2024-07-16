@@ -2,27 +2,23 @@ import TextEditor from "@/component/Editor";
 import { gql, useMutation } from "@apollo/client";
 import { Loader } from "@/component/Loader";
 import { ErrorNotification } from "@/component/Error";
-import { useAuth } from "@/auth/useAuth.tsx";
 
 export const CreateEditor = () => {
   const CREATE_AUDIO = gql`
-    mutation createAudio($content: String!, $voice: String!, $userId: String!) {
-      createAudio(input: { text: $content, voice: $voice, userId: $userId })
+    mutation createAudio($content: String!, $voice: String!) {
+      createAudio(input: { text: $content, voice: $voice })
     }
   `;
-  const [tts, { loading, error, data }] = useMutation(CREATE_AUDIO);
-  const { currentUser } = useAuth();
+  const [createAudio, { loading, error, data }] = useMutation(CREATE_AUDIO);
 
   const handleSave = (content) => {
-    const userId = currentUser?.localAccountId;
-
-    tts({ variables: { content: content, voice: "", userId: userId } }).catch(
-      (e) => console.error("tts error:", e),
+    createAudio({ variables: { content: content, voice: "" } }).catch((e) =>
+      console.error("createAudio error:", e),
     );
   };
 
   if (loading) return <Loader />;
-  if (error) return <ErrorNotification />;
+  if (error) return <ErrorNotification error={error.message} />;
 
   if (data)
     return (

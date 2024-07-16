@@ -12,14 +12,14 @@ import { MsalProvider } from "@azure/msal-react";
 const msalInstance = new PublicClientApplication(msalConfig);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ApolloAppProvider>
-    <GlobalStyle />
-    <React.StrictMode>
-      <MsalProvider instance={msalInstance}>
+  <MsalProvider instance={msalInstance}>
+    <ApolloAppProvider>
+      <GlobalStyle />
+      <React.StrictMode>
         <BrowserRouter>
           <AppRoutes />
         </BrowserRouter>
-      </MsalProvider>
-    </React.StrictMode>
-  </ApolloAppProvider>,
+      </React.StrictMode>
+    </ApolloAppProvider>
+  </MsalProvider>,
 );

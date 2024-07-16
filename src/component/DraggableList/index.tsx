@@ -20,8 +20,7 @@ export const DraggableList: React.FC<DraggableListProps> = ({
   const draggedItemIndex = useRef<number | null>(null);
 
   useEffect(() => {
-    setItems(initialItems); // Call the callback with the initial list
-    console.log("DraggableList items:", initialItems);
+    setItems(initialItems);
   }, [initialItems]);
 
   const onDragStart =

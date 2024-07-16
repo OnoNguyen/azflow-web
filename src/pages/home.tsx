@@ -3,27 +3,22 @@ import { useEffect, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { Loader } from "@/component/Loader";
 import { ErrorNotification } from "@/component/Error";
-import { useAuth } from "@/auth/useAuth.tsx";
 import AudioPlayer from "@/component/AudioPlayer";
 
 const GET_AUDIOS = gql`
-  mutation getAudiokUrls($userId: String!) {
-    audioUrls(input: { userId: $userId })
+  mutation getAudioUrls {
+    audioUrls
   }
 `;
 
 export const Home = () => {
   const [items, setItems] = useState<DraggableListItem[]>([]);
-  const { currentUser } = useAuth();
 
-  const [audiokUrls, { loading, error, data }] = useMutation(GET_AUDIOS);
+  const [audioUrls, { loading, error, data }] = useMutation(GET_AUDIOS);
 
   useEffect(() => {
-    const userId = currentUser?.localAccountId ?? "";
-    audiokUrls({ variables: { userId: userId } }).catch((e) =>
-      console.error(e),
-    );
-  }, [currentUser, audiokUrls]);
+    audioUrls().catch((e) => console.error("audioUrls error:", e));
+  }, [audioUrls]);
 
   useEffect(() => {
     if (data) {

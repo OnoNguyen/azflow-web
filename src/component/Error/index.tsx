@@ -1,3 +1,7 @@
-export const ErrorNotification = () => {
-  return <div>Error :(</div>;
+export const ErrorNotification = ({
+  error = "Something went wrong",
+}: {
+  error?: string;
+}) => {
+  return <div>{error}</div>;
 };
