@@ -8,7 +8,8 @@ import { setContext } from "@apollo/client/link/context";
 import { createPersistedQueryLink } from "@apollo/client/link/persisted-queries";
 import { sha256 } from "crypto-hash";
 import { useAuth } from "@/auth/useAuth.tsx";
-import { Loader } from "@/component/Loader"; // @ts-ignore
+import { Loader } from "@/component/Loader";
+import { ReactNode } from "react";
 
 const authLink = (token: string) => {
   return setContext((_, { headers }) => {
@@ -21,8 +22,7 @@ const authLink = (token: string) => {
   });
 };
 
-// @ts-ignore
-const ApolloAppProvider = ({ children }) => {
+const ApolloAppProvider = ({ children }: { children: ReactNode }) => {
   const { idToken, loading } = useAuth();
 
   const httpLink = createHttpLink({

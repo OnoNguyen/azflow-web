@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import ApolloAppProvider from "./graphql/ApolloAppProvider.tsx";
+import ApolloAppProvider from "@/gql/ApolloAppProvider.tsx";
 import GlobalStyle from "./GlobalStyle.ts";
 import { BrowserRouter } from "react-router-dom";
 import { AppRoutes } from "./component/AppRoutes.tsx";

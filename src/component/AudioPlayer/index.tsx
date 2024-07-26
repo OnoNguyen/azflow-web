@@ -3,11 +3,13 @@ import React, { useRef } from "react";
 export type TAudioPlayerProps = {
   src: string;
   type?: "audio/mp3" | "audio/aac";
+  title: string;
 };
 
 const AudioPlayer: React.FC<TAudioPlayerProps> = ({
   src,
   type = "audio/mp3",
+  title,
 }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -24,15 +26,19 @@ const AudioPlayer: React.FC<TAudioPlayerProps> = ({
   };
 
   return (
-    <audio
-      controls
-      ref={audioRef}
-      onCanPlay={handleCanPlay}
-      onCanPlayThrough={handleCanPlayThrough}
-      onError={handleError}
-    >
-      <source src={src} type={type} />
-    </audio>
+    <div>
+      <h3>{title}</h3>
+      <audio
+        controls
+        ref={audioRef}
+        onCanPlay={handleCanPlay}
+        onCanPlayThrough={handleCanPlayThrough}
+        onError={handleError}
+        title={title}
+      >
+        <source src={src} type={type} />
+      </audio>
+    </div>
   );
 };
 
