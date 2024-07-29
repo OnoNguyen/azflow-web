@@ -4,8 +4,14 @@ Tech stacks:
 
 - react ts
 - styled-components
-  -Vite Bundler
+- Vite Bundler
 - MS Entra for Auth
+
+Prerequisites:
+
+- Node.js installed locally.
+
+Setup:
 
 - To build: `yarn i`
 - To run: `yarn dev`
