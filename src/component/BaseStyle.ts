@@ -7,6 +7,12 @@ const buttonStyle = css`
   font-size: 1em;
   font-weight: bold;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #ccc;
+  }
 `;
 
 export const primaryButton = css`

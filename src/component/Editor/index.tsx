@@ -1,15 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import { primaryButton } from "@/component/BaseStyle.ts";
-import { EditorContainer } from "@/component/Editor/style.ts";
+import { EditorContainer, SaveButton } from "@/component/Editor/style.ts";
 
-const SaveButton = styled.button`
-  ${primaryButton}
-`;
-
-const TextEditor = ({ onSave, upperBound = 4000, lowerBound = 2500 }) => {
+const TextEditor = ({
+  onSave,
+  initialContent,
+  upperBound = 4000,
+  lowerBound = 2500,
+}) => {
   const editorRef = useRef(null);
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(initialContent);
   const [contentLength, setContentLength] = useState(0);
 
   useEffect(() => {
@@ -49,7 +48,7 @@ const TextEditor = ({ onSave, upperBound = 4000, lowerBound = 2500 }) => {
       </div>
       <div>
         <SaveButton onClick={handleSave} disabled={!isWithinBounds}>
-          Generate
+          Upload
         </SaveButton>
         <p>
           Character count: {contentLength} (Limit: {lowerBound} - {upperBound})

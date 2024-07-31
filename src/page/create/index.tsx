@@ -4,6 +4,7 @@ import { Loader } from "@/component/Loader";
 import { ErrorNotification } from "@/component/Error";
 import { useState } from "react";
 import { Input } from "@/component/Input/style.ts";
+import { GenButton, SummaryGenerator } from "@/page/create/style.ts";
 
 export const CreateEditor = () => {
   const [title, setTitle] = useState("");
@@ -15,14 +16,30 @@ export const CreateEditor = () => {
   `;
   const [createAudio, { loading, error, data }] = useMutation(CREATE_AUDIO);
 
-  const handleSave = (content) => {
+  const handleSave = (story: string) => {
     createAudio({
-      variables: { content: content, voice: "", title: title },
+      variables: { content: story, voice: "", title: title },
     }).catch((e) => console.error("createAudio error:", e));
   };
 
-  if (loading) return <Loader />;
-  if (error) return <ErrorNotification error={error.message} />;
+  const SUM_BOOK = gql`
+    mutation createBookSummary($title: String!) {
+      createBookSummary(input: { title: $title })
+    }
+  `;
+
+  const [sumBook, { loading: loadingSum, error: errorSum, data: dataSum }] =
+    useMutation(SUM_BOOK);
+
+  const handleGen = (title: string) => {
+    sumBook({
+      variables: { title: title },
+    }).catch((e) => console.error("summarise book error:", e));
+  };
+
+  if (loading || loadingSum) return <Loader />;
+  if (error || errorSum)
+    return <ErrorNotification error={error?.message || errorSum?.message} />;
 
   if (data)
     return (
@@ -35,13 +52,19 @@ export const CreateEditor = () => {
   return (
     <div>
       <h1>Create New Story</h1>
-      <Input
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Enter title"
+      <SummaryGenerator>
+        <Input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Enter title and author, e.g: Outliers by Malcolm Gladwell"
+        />
+        <GenButton onClick={() => handleGen(title)}>Generate</GenButton>
+      </SummaryGenerator>
+      <TextEditor
+        onSave={handleSave}
+        initialContent={dataSum?.createBookSummary ?? ""}
       />
-      <TextEditor onSave={handleSave} />
     </div>
   );
 };
