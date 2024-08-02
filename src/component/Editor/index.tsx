@@ -5,7 +5,7 @@ const TextEditor = ({
   onSave,
   initialContent,
   upperBound = 4000,
-  lowerBound = 2500,
+  lowerBound = 800,
 }) => {
   const editorRef = useRef(null);
   const [content, setContent] = useState(initialContent);

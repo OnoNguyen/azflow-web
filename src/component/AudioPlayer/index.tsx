@@ -27,7 +27,6 @@ const AudioPlayer: React.FC<TAudioPlayerProps> = ({
 
   return (
     <div>
-      <h3>{title}</h3>
       <audio
         controls
         ref={audioRef}

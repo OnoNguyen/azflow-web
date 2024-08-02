@@ -4,9 +4,9 @@ import { Loader } from "@/component/Loader";
 import { ErrorNotification } from "@/component/Error";
 import { useState } from "react";
 import { Input } from "@/component/Input/style.ts";
-import { GenButton, SummaryGenerator } from "@/page/create/style.ts";
+import { EditDiv, SaveBtn } from "@/page/create/style.ts";
 
-export const CreateEditor = () => {
+export const CreateStory = () => {
   const [title, setTitle] = useState("");
 
   const CREATE_AUDIO = gql`
@@ -52,15 +52,15 @@ export const CreateEditor = () => {
   return (
     <div>
       <h1>Create New Story</h1>
-      <SummaryGenerator>
+      <EditDiv>
         <Input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Enter title and author, e.g: Outliers by Malcolm Gladwell"
         />
-        <GenButton onClick={() => handleGen(title)}>Generate</GenButton>
-      </SummaryGenerator>
+        <SaveBtn onClick={() => handleGen(title)}>Generate</SaveBtn>
+      </EditDiv>
       <TextEditor
         onSave={handleSave}
         initialContent={dataSum?.createBookSummary ?? ""}
