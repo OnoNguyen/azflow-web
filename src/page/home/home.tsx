@@ -4,7 +4,7 @@ import { gql, useQuery } from "@apollo/client";
 import { Loader } from "@/component/Loader";
 import { ErrorNotification } from "@/component/Error";
 import AudioPlayer from "@/component/AudioPlayer";
-import { EditBtn, StoryDiv } from "@/page/home/style.ts";
+import { EditBtn, StoryDiv, ViewBtn } from "@/page/home/style.ts";
 import { useNavigate } from "react-router-dom";
 
 const GET_AUDIOS = gql`
@@ -33,13 +33,24 @@ export const Home = () => {
             <StoryDiv>
               <h3>{title}</h3>
               <AudioPlayer src={url} title={title} />
-              <EditBtn
-                onClick={() =>
-                  navigate(`/edit/${id}/${encodeURIComponent(title)}`)
-                }
-              >
-                Edit
-              </EditBtn>
+              <div style={{ display: "flex", gap: "0.5em" }}>
+                <EditBtn
+                  onClick={() =>
+                    navigate(`/edit/${id}/${encodeURIComponent(title)}`)
+                  }
+                >
+                  Edit
+                </EditBtn>
+                <ViewBtn
+                  onClick={() =>
+                    navigate(
+                      `/view/${encodeURIComponent(url)}/${encodeURIComponent(title)}`,
+                    )
+                  }
+                >
+                  View
+                </ViewBtn>
+              </div>
             </StoryDiv>
           ),
         }),
