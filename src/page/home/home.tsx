@@ -28,7 +28,7 @@ export const Home = () => {
     if (data) {
       const draggableItems = data.getAudios.map(
         ({ url, title, id }: { url: string; title: string; id: number }) => ({
-          key: url,
+          key: id,
           content: (
             <StoryDiv>
               <h3>{title}</h3>
@@ -46,7 +46,7 @@ export const Home = () => {
       );
       setItems(draggableItems);
     }
-  }, [data]);
+  }, [data, navigate]);
 
   if (loading) return <Loader />;
   if (error) return <ErrorNotification error={error.message} />;

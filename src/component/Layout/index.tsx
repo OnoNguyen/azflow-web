@@ -30,19 +30,19 @@ export const PrimaryLayout = () => {
             </Link>
           </li>
           <li>
-            <Link to="/freemind">
+            <Link to="/">
               <span className="material-symbols-outlined">person</span>
               <span>You</span>
             </Link>
           </li>
           <li>
-            <Link to="/login">
+            <Link to="/">
               <span className="material-symbols-outlined">group</span>
               <span>Them</span>
             </Link>
           </li>
           <li>
-            <Link to="/signup">
+            <Link to="/">
               <span className="material-symbols-outlined">manage_accounts</span>
               <span>Profile</span>
             </Link>
@@ -73,19 +73,19 @@ export const StudioLayout = () => {
             </Link>
           </li>
           <li>
-            <Link to="/freemind">
+            <Link to="/">
               <span className="material-symbols-outlined">person</span>
               <span>You</span>
             </Link>
           </li>
           <li>
-            <Link to="/login">
+            <Link to="/">
               <span className="material-symbols-outlined">group</span>
               <span>Them</span>
             </Link>
           </li>
           <li>
-            <Link to="/signup">
+            <Link to="/">
               <span className="material-symbols-outlined">manage_accounts</span>
               <span>Profile</span>
             </Link>
