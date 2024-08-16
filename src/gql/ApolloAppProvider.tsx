@@ -25,8 +25,9 @@ const authLink = (token: string) => {
 const ApolloAppProvider = ({ children }: { children: ReactNode }) => {
   const { idToken, loading } = useAuth();
 
+  console.log("api url", import.meta.env.VITE_API_URL);
   const httpLink = createHttpLink({
-    uri: import.meta.env.VITE_API_URL,
+    uri: `${import.meta.env.VITE_API_URL}/gql`,
   });
 
   const linkChain = authLink(idToken).concat(
