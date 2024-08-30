@@ -2,12 +2,11 @@
 
 interface ImportMetaEnv {
   VITE_API_URL: string;
+  VITE_ENTRA_CLIENT_ID: string;
+  VITE_ENTRA_AUTHORITY: string;
+  VITE_ENTRA_REDIRECT_URI: string;
 }
 
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
-
-//
-// export const PORT = import.meta.env.PORT || 3000;
-// export const API_URL = import.meta.env.API_URL || "http://localhost:3000";

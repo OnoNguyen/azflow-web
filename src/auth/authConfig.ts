@@ -7,9 +7,9 @@ import {
 
 const msalConfig: Configuration = {
   auth: {
-    clientId: "8e269668-5996-4bef-87e1-a803cec7ed67",
-    authority: "https://azflowext.ciamlogin.com/azflowext.onmicrosoft.com",
-    redirectUri: "https://azflow.io/",
+    clientId: import.meta.env.VITE_ENTRA_CLIENT_ID,
+    authority: import.meta.env.VITE_ENTRA_AUTHORITY,
+    redirectUri: import.meta.env.VITE_ENTRA_REDIRECT_URI,
   },
   cache: {
     cacheLocation: "localStorage",

@@ -52,19 +52,23 @@ export const CreateStory = () => {
   return (
     <div>
       <h1>Create New Story</h1>
-      <EditDiv>
-        <Input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter title and author, e.g: Outliers by Malcolm Gladwell"
+      {!dataSum && (
+        <EditDiv>
+          <Input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter title and author, e.g: Outliers by Malcolm Gladwell"
+          />
+          <SaveBtn onClick={() => handleGen(title)}>Generate</SaveBtn>
+        </EditDiv>
+      )}
+      {dataSum?.createBookSummary && (
+        <TextEditor
+          onSave={handleSave}
+          initialContent={dataSum?.createBookSummary}
         />
-        <SaveBtn onClick={() => handleGen(title)}>Generate</SaveBtn>
-      </EditDiv>
-      <TextEditor
-        onSave={handleSave}
-        initialContent={dataSum?.createBookSummary ?? ""}
-      />
+      )}
     </div>
   );
 };
