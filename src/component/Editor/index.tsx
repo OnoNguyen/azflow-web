@@ -6,6 +6,11 @@ const TextEditor = ({
   initialContent,
   upperBound = 4000,
   lowerBound = 800,
+}: {
+  onSave: (content: string) => void;
+  initialContent: string;
+  upperBound?: number;
+  lowerBound?: number;
 }) => {
   const editorRef = useRef(null);
   const [content, setContent] = useState(initialContent);
@@ -21,6 +26,7 @@ const TextEditor = ({
     }
   };
 
+  // @ts-ignore
   const handleChange = (e) => {
     setContent(e.target.value);
   };

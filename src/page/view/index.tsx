@@ -24,7 +24,9 @@ export const ViewStory = () => {
   const { encodedUrl, encodedTitle } = useParams();
   const decodedTitle = decodeURIComponent(encodedTitle ?? "");
   const decodedUrl = decodeURIComponent(encodedUrl ?? "");
-  const [shortUrlData, setShortUrlData] = useState(null);
+  const [shortUrlData, setShortUrlData] = useState<{ shortURL: string }>({
+    shortURL: "",
+  });
   const [showModal, setShowModal] = useState(false);
   const [createShortURL] = useMutation(SHORT_URL);
 
@@ -54,7 +56,7 @@ export const ViewStory = () => {
         <Modal onClick={handleCloseModal}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
             <ModalHeader>
-              <h3>Shareable Short Link</h3>
+              <h3>Shareable Link Copied To Clipboard</h3>
             </ModalHeader>
             <ModalBody>
               <a href={shortUrlData.shortURL} target="_blank">

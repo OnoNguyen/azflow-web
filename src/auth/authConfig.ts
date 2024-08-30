@@ -9,7 +9,7 @@ const msalConfig: Configuration = {
   auth: {
     clientId: "8e269668-5996-4bef-87e1-a803cec7ed67",
     authority: "https://azflowext.ciamlogin.com/azflowext.onmicrosoft.com",
-    redirectUri: "http://localhost:5173",
+    redirectUri: "https://azflow.australiasoutheast.cloudapp.azure.com/",
   },
   cache: {
     cacheLocation: "localStorage",
