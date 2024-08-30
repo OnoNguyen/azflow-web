@@ -21,8 +21,8 @@ steps:
       mkdir -p ~/.ssh
       ssh-keyscan -H 20.11.243.20 >> ~/.ssh/known_hosts
       chmod 600 $(Build.SourcesDirectory)/azflowmvp_key.pem
-      ssh -i $(Build.SourcesDirectory)/azflowmvp_key.pem azureuser@20.11.243.20<< 'EOF'
-        scp -i ~/Dropbox/2024/azflow/azflowmvp_key.pem -r ./dist azureuser@20.11.243.20:/home/azureuser
-        sudo systemctl restart nginx
-      EOF
+      scp -i $(Build.SourcesDirectory)/azflowmvp_key.pem -r ./dist azureuser@20.11.243.20:/home/azureuser
+    #      ssh -i $(Build.SourcesDirectory)/azflowmvp_key.pem azureuser@20.11.243.20<< 'EOF'
+    #        sudo systemctl restart nginx
+    #      EOF
     displayName: 'Deploy to MVP VM'
