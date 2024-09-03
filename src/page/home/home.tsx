@@ -19,20 +19,38 @@ const GET_AUDIOS = gql`
 
 export const Home = () => {
   const [items, setItems] = useState<DraggableListItem[]>([]);
+  const [currentPlayingIndex, setCurrentPlayingIndex] = useState<number | null>(
+    null,
+  );
 
   const { loading, error, data } = useQuery(GET_AUDIOS);
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    const handlePlayNext = (currentIndex: number) => {
+      const nextIndex = currentIndex + 1;
+      if (nextIndex < items.length) {
+        setCurrentPlayingIndex(nextIndex);
+      }
+    };
+
     if (data) {
       const draggableItems = data.getAudios.map(
-        ({ url, title, id }: { url: string; title: string; id: number }) => ({
-          key: id,
+        (
+          { url, title, id }: { url: string; title: string; id: number },
+          index: number,
+        ) => ({
+          key: id.toString(),
           content: (
             <StoryDiv>
               <h3>{title}</h3>
-              <AudioPlayer src={url} title={title} />
+              <AudioPlayer
+                src={url}
+                title={title}
+                autoPlay={index === currentPlayingIndex} // Autoplay the current item
+                onEnded={() => handlePlayNext(index)} // Play next when current item ends
+              />
               <div style={{ display: "flex", gap: "0.5em" }}>
                 <EditBtn
                   onClick={() =>
@@ -57,13 +75,13 @@ export const Home = () => {
       );
       setItems(draggableItems);
     }
-  }, [data, navigate]);
+  }, [data, navigate, currentPlayingIndex, items.length]);
 
   if (loading) return <Loader />;
   if (error) return <ErrorNotification error={error.message} />;
 
   const handleUpdate = (updatedItems: DraggableListItem[]) => {
-    console.log("handleUpdate", updatedItems);
+    setItems(updatedItems);
   };
 
   return (

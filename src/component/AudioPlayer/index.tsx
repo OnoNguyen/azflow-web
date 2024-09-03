@@ -1,43 +1,30 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
-export type TAudioPlayerProps = {
+type AudioPlayerProps = {
   src: string;
   type?: "audio/mp3" | "audio/aac";
   title: string;
+  autoPlay?: boolean;
+  onEnded?: () => void;
 };
 
-const AudioPlayer: React.FC<TAudioPlayerProps> = ({
+const AudioPlayer: React.FC<AudioPlayerProps> = ({
   src,
-  type = "audio/mp3",
-  title,
+  autoPlay,
+  onEnded,
 }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const handleCanPlay = () => {
-    console.log("Audio can play");
-  };
-
-  const handleCanPlayThrough = () => {
-    console.log("Audio can play through");
-  };
-
-  const handleError = () => {
-    console.error("Error occurred while loading audio");
-  };
+  useEffect(() => {
+    if (autoPlay && audioRef.current) {
+      audioRef.current.play();
+    }
+  }, [autoPlay]);
 
   return (
-    <div>
-      <audio
-        controls
-        ref={audioRef}
-        onCanPlay={handleCanPlay}
-        onCanPlayThrough={handleCanPlayThrough}
-        onError={handleError}
-        title={title}
-      >
-        <source src={src} type={type} />
-      </audio>
-    </div>
+    <audio ref={audioRef} controls src={src} onEnded={onEnded}>
+      Your browser does not support the audio element.
+    </audio>
   );
 };
 
