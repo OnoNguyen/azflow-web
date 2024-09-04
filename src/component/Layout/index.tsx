@@ -30,7 +30,7 @@ export const PrimaryLayout = () => {
             </Link>
           </li>
           <li>
-            <Link to="/">
+            <Link to="/you">
               <span className="material-symbols-outlined">person</span>
               <span>You</span>
             </Link>

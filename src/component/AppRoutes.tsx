@@ -2,10 +2,11 @@ import { Route, Routes } from "react-router-dom";
 import { PrimaryLayout, StudioLayout } from "@/component/Layout";
 import ProtectedRoute from "@/auth/ProtectedRoute.tsx";
 import { CreateStory } from "@/page/create";
-import { Home } from "@/page/home/home.tsx";
+import { Home } from "@/page/home";
 import { EditStory } from "@/page/edit";
 import { ViewStory } from "@/page/view";
 import { ShortLink } from "@/component/ShortLink";
+import { You } from "@/page/you";
 
 export const AppRoutes = () => {
   return (
@@ -17,6 +18,9 @@ export const AppRoutes = () => {
       </Route>
 
       <Route element={<ProtectedRoute />}>
+        <Route path="/you" element={<PrimaryLayout />}>
+          <Route index element={<You />} />
+        </Route>
         <Route path="/create" element={<StudioLayout />}>
           <Route index element={<CreateStory />} />
         </Route>
