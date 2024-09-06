@@ -1,5 +1,5 @@
 import { useIsAuthenticated, useMsal } from "@azure/msal-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { loginRequest, logoutRequest } from "@/auth/authConfig";
 
 export const useAuth = () => {
@@ -8,33 +8,37 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(false);
   const [idToken, setIdToken] = useState<string>("");
 
-  const handleLogin = async () => {
-    if (!isAuthenticated) {
+  const handleLogin = useCallback(async () => {
+    if (!isAuthenticated && !loading) {
       setLoading(true);
       try {
         await instance.loginRedirect(loginRequest);
+      } catch (error) {
+        console.error("Login error:", error);
       } finally {
         setLoading(false);
       }
     }
-  };
+  }, [isAuthenticated, loading, instance]);
 
-  const handleLogout = async () => {
-    if (isAuthenticated) {
+  const handleLogout = useCallback(async () => {
+    if (isAuthenticated && !loading) {
       setLoading(true);
       try {
         await instance.logoutRedirect(logoutRequest);
+      } catch (error) {
+        console.error("Logout error:", error);
       } finally {
         setLoading(false);
       }
     }
-  };
+  }, [isAuthenticated, loading, instance]);
 
   const currentUser = accounts[0]; // Get the current user
 
   useEffect(() => {
     const fetchToken = async () => {
-      if (currentUser) {
+      if (currentUser && !loading) {
         setLoading(true);
         try {
           await instance.initialize();
@@ -53,7 +57,7 @@ export const useAuth = () => {
     };
 
     fetchToken().catch((e) => console.error("fetchToken error:", e));
-  }, [instance, currentUser]);
+  }, [instance, currentUser, loading]);
 
   return {
     isAuthed: isAuthenticated,
