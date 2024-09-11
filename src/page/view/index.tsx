@@ -1,16 +1,9 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  CloseBtn,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ShareBtn,
-} from "@/page/view/style.ts";
+import { ShareBtn } from "./style.ts";
 import AudioPlayer from "@/component/AudioPlayer";
-import { gql, useMutation } from "@apollo/client"; // Simple function to simulate URL shortening
+import { gql, useMutation } from "@apollo/client";
+import Modal from "@/component/Modal";
 
 const SHORT_URL = gql`
   mutation createShortURL($longURL: String!) {
@@ -52,23 +45,19 @@ export const ViewStory = () => {
       <AudioPlayer src={decodedUrl} title={decodedTitle} />
       <ShareBtn onClick={handleShare}>Share</ShareBtn>
 
-      {showModal && shortUrlData && (
-        <Modal onClick={handleCloseModal}>
-          <ModalContent onClick={(e) => e.stopPropagation()}>
-            <ModalHeader>
-              <h3>Shareable Link Copied To Clipboard</h3>
-            </ModalHeader>
-            <ModalBody>
-              <a href={shortUrlData.shortURL} target="_blank">
-                {shortUrlData.shortURL}
-              </a>
-            </ModalBody>
-            <ModalFooter>
-              <CloseBtn onClick={handleCloseModal}>Close</CloseBtn>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      )}
+      <Modal
+        isOpen={showModal}
+        onClose={handleCloseModal}
+        title="Shareable Link Copied To Clipboard"
+      >
+        <a
+          href={shortUrlData.shortURL}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {shortUrlData.shortURL}
+        </a>
+      </Modal>
     </div>
   );
 };
