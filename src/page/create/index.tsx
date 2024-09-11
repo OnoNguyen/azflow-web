@@ -5,21 +5,64 @@ import { ErrorNotification } from "@/component/Error";
 import { useState } from "react";
 import { Input } from "@/component/Input/style.ts";
 import { EditDiv, SaveBtn } from "@/page/create/style.ts";
+import { useNavigate } from "react-router-dom";
+import Modal from "@/component/Modal";
 
 export const CreateStory = () => {
   const [title, setTitle] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   const CREATE_AUDIO = gql`
     mutation createAudio($content: String!, $voice: String!, $title: String!) {
-      createAudio(input: { text: $content, voice: $voice, title: $title })
+      createAudio(input: { text: $content, voice: $voice, title: $title }) {
+        id
+        title
+      }
     }
   `;
-  const [createAudio, { loading, error, data }] = useMutation(CREATE_AUDIO);
+
+  const GET_AUDIOS = gql`
+    query getAudios {
+      getAudios {
+        url
+        title
+        id
+      }
+    }
+  `;
+
+  const [createAudio, { loading, error, data }] = useMutation(CREATE_AUDIO, {
+    refetchQueries: [{ query: GET_AUDIOS }],
+    update(cache, { data: { createAudio } }) {
+      cache.modify({
+        fields: {
+          audios(existingAudios = []) {
+            const newAudioRef = cache.writeFragment({
+              data: createAudio,
+              fragment: gql`
+                fragment NewAudio on Audio {
+                  id
+                  title
+                }
+              `,
+            });
+            return [...existingAudios, newAudioRef];
+          },
+        },
+      });
+    },
+  });
 
   const handleSave = (story: string) => {
     createAudio({
       variables: { content: story, voice: "", title: title },
     }).catch((e) => console.error("createAudio error:", e));
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    navigate("/");
   };
 
   const SUM_BOOK = gql`
@@ -43,16 +86,19 @@ export const CreateStory = () => {
 
   if (data)
     return (
-      <div>
-        <h1>Story Created</h1>
-        <p>{data.tts}</p>
-      </div>
+      <Modal
+        isOpen={showModal}
+        onClose={handleModalClose}
+        title="Story Created"
+      >
+        <p>Your story has been successfully created.</p>
+      </Modal>
     );
 
   return (
     <div>
       <h1>Create New Story</h1>
-      {!dataSum && (
+      {
         <EditDiv>
           <Input
             type="text"
@@ -62,7 +108,7 @@ export const CreateStory = () => {
           />
           <SaveBtn onClick={() => handleGen(title)}>Generate</SaveBtn>
         </EditDiv>
-      )}
+      }
       {dataSum?.createBookSummary && (
         <TextEditor
           onSave={handleSave}
