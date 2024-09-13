@@ -1,18 +1,24 @@
 import { Outlet } from "react-router-dom";
 import { useAuth } from "@/auth/useAuth.tsx";
-import { Login } from "@/component/Login";
+import {
+  AuthenticatedTemplate,
+  UnauthenticatedTemplate,
+} from "@azure/msal-react";
+import { LoginButton } from "@/component/Login/style.ts";
 
 const ProtectedRoute = () => {
-  const { isAuthed } = useAuth();
+  const { handleLogin } = useAuth();
 
-  return isAuthed ? (
-    <Outlet />
-  ) : (
+  return (
     <>
-      <h4>Please login to continue</h4>
-      <Login />
+      <AuthenticatedTemplate>
+        <Outlet />
+      </AuthenticatedTemplate>
+      <UnauthenticatedTemplate>
+        <h1>Please login to continue</h1>
+        <LoginButton onClick={handleLogin}>Log in</LoginButton>
+      </UnauthenticatedTemplate>
     </>
   );
 };
-
 export default ProtectedRoute;

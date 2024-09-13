@@ -1,3 +1,4 @@
+import { ReactNode, useMemo } from "react";
 import {
   ApolloClient,
   ApolloProvider,
@@ -9,54 +10,52 @@ import { createPersistedQueryLink } from "@apollo/client/link/persisted-queries"
 import { sha256 } from "crypto-hash";
 import { useAuth } from "@/auth/useAuth.tsx";
 import { Loader } from "@/component/Loader";
-import { ReactNode } from "react";
-
-const authLink = (token: string) => {
-  return setContext((_, { headers }) => {
-    return {
-      headers: {
-        ...headers,
-        authorization: token ?? "",
-      },
-    };
-  });
-};
 
 const ApolloAppProvider = ({ children }: { children: ReactNode }) => {
   const { idToken, loading } = useAuth();
 
-  console.log("api url", import.meta.env.VITE_API_URL);
-  const httpLink = createHttpLink({
-    uri: `${import.meta.env.VITE_API_URL}/gql`,
-  });
+  const client = useMemo(() => {
+    console.log("Creating Apollo client", import.meta.env.VITE_API_URL); // This should only log once per auth state change
 
-  const linkChain = authLink(idToken).concat(
-    createPersistedQueryLink({
-      sha256,
-      useGETForHashedQueries: true,
-    }).concat(httpLink),
-  );
+    const httpLink = createHttpLink({
+      uri: `${import.meta.env.VITE_API_URL}/gql`,
+    });
 
-  const client = new ApolloClient({
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {},
-        },
+    const authLink = setContext((_, { headers }) => ({
+      headers: {
+        ...headers,
+        authorization: idToken ?? "",
       },
-    }),
-    resolvers: {
-      Mutation: {},
-    },
-    link: linkChain,
-    connectToDevTools: true,
-  });
+    }));
 
-  return loading ? (
-    <Loader />
-  ) : (
-    <ApolloProvider client={client}>{children}</ApolloProvider>
-  );
+    const linkChain = authLink.concat(
+      createPersistedQueryLink({
+        sha256,
+        useGETForHashedQueries: true,
+      }).concat(httpLink),
+    );
+
+    return new ApolloClient({
+      cache: new InMemoryCache({
+        typePolicies: {
+          Query: {
+            fields: {},
+          },
+        },
+      }),
+      resolvers: {
+        Mutation: {},
+      },
+      link: linkChain,
+      connectToDevTools: true,
+    });
+  }, [idToken]); // Only recreate client when idToken changes
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
 
 export default ApolloAppProvider;

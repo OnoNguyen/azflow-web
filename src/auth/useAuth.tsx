@@ -60,7 +60,6 @@ export const useAuth = () => {
   }, [instance, currentUser, loading]);
 
   return {
-    isAuthed: isAuthenticated,
     handleLogin,
     handleLogout,
     loading,
