@@ -11,6 +11,7 @@ const GET_AUDIOS = gql`
   query getAudios {
     getAudios {
       url
+      captionUrl
       title
       id
     }

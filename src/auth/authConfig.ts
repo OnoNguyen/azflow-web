@@ -5,11 +5,14 @@ import {
   RedirectRequest,
 } from "@azure/msal-browser";
 
+const env = import.meta.env;
+
 const msalConfig: Configuration = {
   auth: {
-    clientId: import.meta.env.VITE_ENTRA_CLIENT_ID,
-    authority: import.meta.env.VITE_ENTRA_AUTHORITY,
-    redirectUri: import.meta.env.VITE_ENTRA_REDIRECT_URI,
+    clientId: env.VITE_ENTRA_CLIENT_ID,
+    authority: `${env.VITE_ENTRA_AUTHORITY}/${env.VITE_ENTRA_TENANT_ID}`,
+    redirectUri: env.VITE_ENTRA_REDIRECT_URI,
+    knownAuthorities: [env.VITE_ENTRA_AUTHORITY],
   },
   cache: {
     cacheLocation: "localStorage",
