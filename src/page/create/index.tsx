@@ -57,7 +57,9 @@ export const CreateStory = () => {
   const handleSave = (story: string) => {
     createAudio({
       variables: { content: story, voice: "", title: title },
-    }).catch((e) => console.error("createAudio error:", e));
+    })
+      .then(() => setShowModal(true))
+      .catch((e) => console.error("createAudio error:", e));
   };
 
   const handleModalClose = () => {
@@ -84,7 +86,7 @@ export const CreateStory = () => {
   if (error || errorSum)
     return <ErrorNotification error={error?.message || errorSum?.message} />;
 
-  if (data)
+  if (showModal)
     return (
       <Modal
         isOpen={showModal}

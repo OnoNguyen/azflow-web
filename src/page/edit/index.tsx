@@ -12,14 +12,14 @@ const GET_AUDIO = gql`
     getAudio(id: $id) {
       id
       title
-      captionUrl
+      transcriptUrl
     }
   }
 `;
 
 const EDIT_AUDIO = gql`
-  mutation editAudio($id: Int!, $title: String!, $caption: String!) {
-    editAudio(input: { id: $id, title: $title, caption: $caption }) {
+  mutation editAudio($id: Int!, $title: String!, $transcript: String!) {
+    editAudio(input: { id: $id, title: $title, transcript: $transcript }) {
       id
       title
     }
@@ -30,7 +30,7 @@ const GET_AUDIOS = gql`
   query getAudiosForMember {
     getAudiosForMember {
       url
-      captionUrl
+      transcriptUrl
       title
       id
     }
@@ -43,7 +43,7 @@ export const EditStory = () => {
   const id = parseInt(storyId ?? "-1");
   const initTitle = decodeURIComponent(encodedTitle ?? "");
   const [title, setTitle] = useState(initTitle);
-  const [caption, setCaption] = useState("");
+  const [transcript, setTranscript] = useState("");
   const [showModal, setShowModal] = useState(false);
 
   const {
@@ -84,24 +84,22 @@ export const EditStory = () => {
     if (data && data.getAudio) {
       setTitle(data.getAudio.title);
 
-      if (data.getAudio.captionUrl) {
-        fetch(data.getAudio.captionUrl)
+      if (data.getAudio.transcriptUrl) {
+        fetch(data.getAudio.transcriptUrl)
           .then((response) => response.text())
-          .then((text) => setCaption(text))
+          .then((text) => setTranscript(text))
           .catch((error) => {
-            console.error("Error fetching caption:", error);
+            console.error("Error fetching transcript:", error);
           });
       }
     }
   }, [data]);
 
-  const handleSave = (title: string, caption: string) => {
+  const handleSave = (title: string, transcript: string) => {
     editAudio({
-      variables: { id: id, title: title, caption: caption },
+      variables: { id: id, title: title, transcript: transcript },
     })
-      .then(() => {
-        setShowModal(true);
-      })
+      .then(() => setShowModal(true))
       .catch((e) => console.error("editAudio error:", e));
   };
 
@@ -132,10 +130,10 @@ export const EditStory = () => {
             width: "100%",
             resize: "none",
           }}
-          value={caption}
-          onChange={(e) => setCaption(e.target.value)}
+          value={transcript}
+          onChange={(e) => setTranscript(e.target.value)}
         />
-        <SaveBtn onClick={() => handleSave(title, caption)}>Save</SaveBtn>
+        <SaveBtn onClick={() => handleSave(title, transcript)}>Save</SaveBtn>
       </EditDiv>
 
       <Modal isOpen={showModal} onClose={handleModalClose} title="Story Edited">
