@@ -32,7 +32,7 @@ export const CreateStory = () => {
     }
   `;
 
-  const [createAudio, { loading, error, data }] = useMutation(CREATE_AUDIO, {
+  const [createAudio, { loading, error }] = useMutation(CREATE_AUDIO, {
     refetchQueries: [{ query: GET_AUDIOS }],
     update(cache, { data: { createAudio } }) {
       cache.modify({
