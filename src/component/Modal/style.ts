@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { primaryButton } from "@/component/BaseStyle.ts";
+import { PrimaryButton } from "@/component/BaseStyle.ts";
 
 export const CloseBtn = styled.button`
-  ${primaryButton}
+  ${PrimaryButton}
 `;
 
 export const Modal = styled.div`

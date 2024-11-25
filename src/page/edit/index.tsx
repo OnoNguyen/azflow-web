@@ -3,9 +3,10 @@ import { Loader } from "@/component/Loader";
 import { ErrorNotification } from "@/component/Error";
 import { useEffect, useState } from "react";
 import { Input } from "@/component/Input/style.ts";
-import { EditDiv, SaveBtn } from "@/page/create/style.ts";
+import { EditDiv } from "@/page/create/style.ts";
 import { useNavigate, useParams } from "react-router-dom";
 import Modal from "@/component/Modal";
+import { PrimaryButton } from "@/component/BaseStyle.ts";
 
 const GET_AUDIO = gql`
   query getAudio($id: Int!) {
@@ -112,6 +113,9 @@ export const EditStory = () => {
   if (queryError) return <ErrorNotification error={queryError.message} />;
   if (mutationError) return <ErrorNotification error={mutationError.message} />;
 
+  const numberOfChapter = 5;
+  const chapterCreated = false;
+
   return (
     <div>
       <h1>Edit Story</h1>
@@ -133,9 +137,32 @@ export const EditStory = () => {
           value={transcript}
           onChange={(e) => setTranscript(e.target.value)}
         />
-        <SaveBtn onClick={() => handleSave(title, transcript)}>Save</SaveBtn>
+        <PrimaryButton onClick={() => handleSave(title, transcript)}>
+          Save
+        </PrimaryButton>
       </EditDiv>
 
+      {[...Array(numberOfChapter)].map((_, index) => (
+        <div key={index}>
+          <h2>Chapter {index + 1}</h2>
+          {chapterCreated ? (
+            <textarea
+              style={{
+                border: "1px solid #ccc",
+                minHeight: "300px",
+                padding: "10px",
+                borderRadius: "5px",
+                width: "100%",
+                resize: "none",
+              }}
+              value={transcript}
+              onChange={(e) => setTranscript(e.target.value)}
+            />
+          ) : (
+            <SaveBtn onClick={() => {}}>Generate</SaveBtn>
+          )}
+        </div>
+      ))}
       <Modal isOpen={showModal} onClose={handleModalClose} title="Story Edited">
         <p>Your story has been successfully edited.</p>
       </Modal>

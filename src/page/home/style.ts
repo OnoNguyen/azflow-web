@@ -1,11 +1,7 @@
 import styled from "styled-components";
-import { primaryButton, secondaryButton } from "@/component/BaseStyle.ts";
+import { PrimaryButton, SecondaryButton } from "@/component/BaseStyle.ts";
 
 export const StoryDiv = styled.div``;
 
-export const EditBtn = styled.button`
-  ${secondaryButton}
-`;
-export const ViewBtn = styled.button`
-  ${primaryButton}
-`;
+export const EditBtn = styled(SecondaryButton)``;
+export const ViewBtn = styled(PrimaryButton)``;

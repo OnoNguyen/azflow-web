@@ -1,4 +1,4 @@
-import { css } from "styled-components";
+import styled, { css } from "styled-components";
 
 const buttonStyle = css`
   padding: 10px 20px;
@@ -15,14 +15,14 @@ const buttonStyle = css`
   }
 `;
 
-export const primaryButton = css`
-  ${buttonStyle}
+export const PrimaryButton = styled.button`
+  ${buttonStyle};
   background-color: #0077cc;
   color: white;
 `;
 
-export const secondaryButton = css`
-  ${buttonStyle}
+export const SecondaryButton = styled.button`
+  ${buttonStyle};
   background-color: #ccc;
   color: black;
 `;

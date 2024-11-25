@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import { primaryButton } from "@/component/BaseStyle.ts";
+import { PrimaryButton } from "@/component/BaseStyle.ts";
 
-export const LoginButton = styled.button`
-  ${primaryButton}
-`;
+export const LoginButton = styled(PrimaryButton)``;

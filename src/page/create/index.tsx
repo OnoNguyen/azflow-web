@@ -2,16 +2,29 @@ import TextEditor from "@/component/Editor";
 import { gql, useMutation } from "@apollo/client";
 import { Loader } from "@/component/Loader";
 import { ErrorNotification } from "@/component/Error";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/component/Input/style.ts";
-import { EditDiv, SaveBtn } from "@/page/create/style.ts";
+import { EditDiv } from "@/page/create/style.ts";
 import { useNavigate } from "react-router-dom";
 import Modal from "@/component/Modal";
+import { PrimaryButton, SecondaryButton } from "@/component/BaseStyle.ts";
+import { SentenceEditorContainer } from "@/component/Editor/style.ts";
 
 export const CreateStory = () => {
   const [title, setTitle] = useState("");
+  const [storyContent, setStoryContent] = useState("");
+  const [contentTrunks, setContentTrunks] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+
+  const CREATE_META = gql`
+    mutation createAudio($content: String!, $voice: String!, $title: String!) {
+      createAudio(input: { text: $content, voice: $voice, title: $title }) {
+        id
+        title
+      }
+    }
+  `;
 
   const CREATE_AUDIO = gql`
     mutation createAudio($content: String!, $voice: String!, $title: String!) {
@@ -32,34 +45,14 @@ export const CreateStory = () => {
     }
   `;
 
-  const [createAudio, { loading, error }] = useMutation(CREATE_AUDIO, {
-    refetchQueries: [{ query: GET_AUDIOS }],
-    update(cache, { data: { createAudio } }) {
-      cache.modify({
-        fields: {
-          audios(existingAudios = []) {
-            const newAudioRef = cache.writeFragment({
-              data: createAudio,
-              fragment: gql`
-                fragment NewAudio on Audio {
-                  id
-                  title
-                }
-              `,
-            });
-            return [...existingAudios, newAudioRef];
-          },
-        },
-      });
-    },
-  });
+  const [createMeta, { loading, error }] = useMutation(CREATE_META);
 
-  const handleSave = (story: string) => {
-    createAudio({
+  const handleCreateMeta = (story: string) => {
+    createMeta({
       variables: { content: story, voice: "", title: title },
     })
       .then(() => setShowModal(true))
-      .catch((e) => console.error("createAudio error:", e));
+      .catch((e) => console.error("createMeta error:", e));
   };
 
   const handleModalClose = () => {
@@ -82,6 +75,14 @@ export const CreateStory = () => {
     }).catch((e) => console.error("summarise book error:", e));
   };
 
+  useEffect(() => {
+    setContentTrunks(
+      storyContent
+        .split(".")
+        .map((sentence) => sentence.trim())
+        .filter((sentence) => sentence !== ""),
+    );
+  }, [storyContent]);
   if (loading || loadingSum) return <Loader />;
   if (error || errorSum)
     return <ErrorNotification error={error?.message || errorSum?.message} />;
@@ -108,15 +109,41 @@ export const CreateStory = () => {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter title and author, e.g: Outliers by Malcolm Gladwell"
           />
-          <SaveBtn onClick={() => handleGen(title)}>Generate</SaveBtn>
+          <PrimaryButton onClick={() => handleGen(title)}>
+            Generate
+          </PrimaryButton>
         </EditDiv>
       }
-      {dataSum?.createBookSummary && (
-        <TextEditor
-          onSave={handleSave}
-          initialContent={dataSum?.createBookSummary}
-        />
-      )}
+      {
+        <EditDiv>
+          <TextEditor
+            initialContent={dataSum?.createBookSummary || ""}
+            onContentChange={setStoryContent}
+          />
+        </EditDiv>
+      }
+      {
+        <SentenceEditorContainer>
+          {contentTrunks.map((sentence, index) => (
+            <div key={sentence}>
+              <textarea
+                style={{
+                  border: "1px solid #ccc",
+                  padding: "10px",
+                  borderRadius: "5px",
+                  width: "100%",
+                  resize: "none",
+                }}
+                value={sentence}
+                readOnly
+              />
+              <SecondaryButton onClick={() => handleCreateMeta(sentence)}>
+                Generate Image
+              </SecondaryButton>
+            </div>
+          ))}
+        </SentenceEditorContainer>
+      }
     </div>
   );
 };

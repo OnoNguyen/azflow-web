@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { primaryButton } from "@/component/BaseStyle.ts";
+import { PrimaryButton } from "@/component/BaseStyle.ts";
 
 export const ShareBtn = styled.button`
-  ${primaryButton}
+  ${PrimaryButton}
 `;

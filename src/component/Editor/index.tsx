@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { EditorContainer, SaveButton } from "@/component/Editor/style.ts";
+import { EditorContainer } from "@/component/Editor/style.ts";
 
 const TextEditor = ({
-  onSave,
   initialContent,
+  onContentChange,
   upperBound = 4000,
   lowerBound = 800,
 }: {
-  onSave: (content: string) => void;
   initialContent: string;
+  onContentChange?: (content: string) => void;
   upperBound?: number;
   lowerBound?: number;
 }) => {
@@ -18,21 +18,13 @@ const TextEditor = ({
 
   useEffect(() => {
     setContentLength(content.length);
-  }, [content]);
-
-  const handleSave = () => {
-    if (editorRef.current) {
-      onSave(content);
-    }
-  };
+    onContentChange?.(content);
+  }, [content, onContentChange]);
 
   // @ts-ignore
   const handleChange = (e) => {
     setContent(e.target.value);
   };
-
-  const isWithinBounds =
-    contentLength >= lowerBound && contentLength <= upperBound;
 
   return (
     <EditorContainer>
@@ -43,7 +35,6 @@ const TextEditor = ({
           onChange={handleChange}
           style={{
             border: "1px solid #ccc",
-            minHeight: "300px",
             padding: "10px",
             borderRadius: "5px",
             width: "100%",
@@ -53,11 +44,8 @@ const TextEditor = ({
         ></textarea>
       </div>
       <div>
-        <SaveButton onClick={handleSave} disabled={!isWithinBounds}>
-          Upload
-        </SaveButton>
         <p>
-          Character count: {contentLength} (Limit: {lowerBound} - {upperBound})
+          Word count: {contentLength} (Limit: {lowerBound} - {upperBound})
         </p>
       </div>
     </EditorContainer>
