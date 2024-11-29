@@ -1,52 +1,50 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EditorContainer } from "@/component/Editor/style.ts";
 
 const TextEditor = ({
   initialContent,
   onContentChange,
-  upperBound = 4000,
-  lowerBound = 800,
+  blinkIt = false, // New prop to control blinking
 }: {
   initialContent: string;
   onContentChange?: (content: string) => void;
-  upperBound?: number;
-  lowerBound?: number;
+  blinkIt?: boolean;
 }) => {
-  const editorRef = useRef(null);
   const [content, setContent] = useState(initialContent);
-  const [contentLength, setContentLength] = useState(0);
+  const [wordCount, setWordCount] = useState(0);
 
   useEffect(() => {
-    setContentLength(content.length);
+    setWordCount(
+      content
+        .trim()
+        .replace("  ", " ")
+        .split(" ")
+        .filter((w) => w !== ".").length,
+    );
     onContentChange?.(content);
   }, [content, onContentChange]);
 
-  // @ts-ignore
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   };
 
   return (
-    <EditorContainer>
+    <EditorContainer style={{ position: "relative" }}>
+      <textarea
+        value={content}
+        onChange={handleChange}
+        style={{
+          border: blinkIt ? "2px solid green" : "1px solid #ccc", // Blink effect
+          padding: "10px",
+          borderRadius: "5px",
+          width: "100%",
+          minHeight: "100px",
+          overflow: "hidden",
+        }}
+        placeholder={"Start typing here..."}
+      ></textarea>
       <div>
-        <textarea
-          ref={editorRef}
-          value={content}
-          onChange={handleChange}
-          style={{
-            border: "1px solid #ccc",
-            padding: "10px",
-            borderRadius: "5px",
-            width: "100%",
-            resize: "none",
-          }}
-          placeholder={"Start typing here..."}
-        ></textarea>
-      </div>
-      <div>
-        <p>
-          Word count: {contentLength} (Limit: {lowerBound} - {upperBound})
-        </p>
+        <p>Word count: {wordCount}</p>
       </div>
     </EditorContainer>
   );

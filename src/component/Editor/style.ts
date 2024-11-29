@@ -15,4 +15,9 @@ export const SentenceEditorContainer = styled(EditorContainer)`
   textarea {
     min-height: 50px;
   }
+
+  display: flex;
+  flex-direction: row;
+  overflow: auto;
+  gap: 0.5em;
 `;

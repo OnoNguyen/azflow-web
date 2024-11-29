@@ -13,6 +13,7 @@ export const Wrapper = styled.div`
 export const Main = styled.div`
   padding: 1em;
   grid-area: main;
+  max-width: 90vw;
 `;
 
 export const Nav = styled.div`
