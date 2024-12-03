@@ -141,10 +141,17 @@ export const CreateStory = () => {
       }
       {
         // video preview div
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          {previewReady ? (
-            <video controls>
-              <source src={dataPreview?.createVideoPreview} type="video/mp4" />
+        // size the video to fit Iphone 15 Pro screen size
+        // 430 x 932
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          {previewReady && dataPreview ? (
+            <video controls style={{ maxWidth: "430px", maxHeight: "920px" }}>
+              <source src={dataPreview.createVideoPreview} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           ) : (
