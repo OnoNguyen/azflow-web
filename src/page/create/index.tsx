@@ -115,7 +115,7 @@ export const CreateStory = () => {
     );
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.5em" }}>
       <h1>Create New Story</h1>
       {
         <EditDiv ref={editDivRef}>
@@ -154,6 +154,8 @@ export const CreateStory = () => {
               <source src={dataPreview.createVideoPreview} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
+          ) : loadingPreview ? (
+            <Loader />
           ) : (
             <PrimaryButton
               onClick={() => {
