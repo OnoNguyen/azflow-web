@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { Loader } from "@/component/Loader";
-import { ErrorNotification } from "@/component/Error";
 import { Input } from "@/component/Input/style.ts";
 import { EditDiv } from "@/page/create/style.ts";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +8,77 @@ import Modal from "@/component/Modal";
 import { PrimaryButton, SecondaryButton } from "@/component/BaseStyle.ts";
 import { SentenceEditorContainer } from "@/component/Editor/style.ts";
 import TextEditor from "@/component/Editor";
+import AudioPlayer from "@/component/AudioPlayer";
+import { ImageArea } from "@/page/create/imageArea.tsx";
+
+const AudioArea = ({
+  sentence,
+  id,
+  handleCreateAudioTrunk,
+  handleTextAreaClick,
+  loadingAudioTrunk,
+}) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <AudioPlayer
+        title={""}
+        src={`${import.meta.env.VITE_API_URL}/video/${id}.mp3?t=${Date.now()}`}
+      />
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <textarea
+          style={{
+            border: "1px solid #ccc",
+            padding: "10px",
+            borderRadius: "5px",
+            width: "100%",
+            resize: "none",
+          }}
+          value={sentence}
+          readOnly
+          onClick={() => handleTextAreaClick()} // Attach the click handler
+        />
+        {loadingAudioTrunk ? (
+          <Loader />
+        ) : (
+          <SecondaryButton onClick={() => handleCreateAudioTrunk(sentence, id)}>
+            Create Audio
+          </SecondaryButton>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const ImageGenArea = ({ sentence }) => {
+  return (
+    <div
+      style={{
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
+      <textarea
+        style={{
+          border: "1px solid #ccc",
+          padding: "10px",
+          borderRadius: "5px",
+          width: "100%",
+          resize: "none",
+        }}
+        value={sentence}
+      />
+      <SecondaryButton onClick={() => {}}>Create Image</SecondaryButton>
+    </div>
+  );
+};
 
 export const CreateStory = () => {
   const [title, setTitle] = useState("");
@@ -28,12 +98,9 @@ export const CreateStory = () => {
     }
   `;
 
-  const CREATE_META = gql`
-    mutation createAudio($content: String!, $voice: String!, $title: String!) {
-      createAudio(input: { text: $content, voice: $voice, title: $title }) {
-        id
-        title
-      }
+  const CREATE_AUDIO_TRUNK = gql`
+    mutation createAudioTrunk($text: String!, $voice: String!, $id: Int!) {
+      createAudioTrunk(input: { text: $text, voice: $voice, id: $id })
     }
   `;
 
@@ -43,26 +110,33 @@ export const CreateStory = () => {
     }
   `;
 
-  const [createMeta, { loading, error }] = useMutation(CREATE_META);
+  const [
+    createAudioTrunk,
+    {
+      loading: loadingAudioTrunk,
+      error: errorAudioTrunk,
+      data: dataAudioTrunk,
+    },
+  ] = useMutation(CREATE_AUDIO_TRUNK);
+
   const [sumBook, { loading: loadingSum, error: errorSum, data: dataSum }] =
     useMutation(SUM_BOOK);
+
   const [
     createVideoPreview,
     { loading: loadingPreview, error: errorPreview, data: dataPreview },
   ] = useMutation(CREATE_VIDEO_PREVIEW);
 
+  const handleCreateAudioTrunk = (text: string, id: number) => {
+    createAudioTrunk({
+      variables: { text: text, voice: "", id: id },
+    }).catch((e) => console.error("createAudioTrunk error:", e));
+  };
+
   const handleCreateVideoPreview = () => {
     createVideoPreview({
       variables: { images: [], contentTrunks: contentTrunks },
     }).catch((e) => console.error("createPreview error:", e));
-  };
-
-  const handleSuggestImage = (story: string) => {
-    createMeta({
-      variables: { content: story, voice: "", title: title },
-    })
-      .then(() => setShowModal(true))
-      .catch((e) => console.error("createMeta error:", e));
   };
 
   const handleGen = (title: string) => {
@@ -98,10 +172,6 @@ export const CreateStory = () => {
     );
     setPreviewReady(false);
   }, [storyContent]);
-
-  if (loading || loadingSum) return <Loader />;
-  if (error || errorSum)
-    return <ErrorNotification error={error?.message || errorSum?.message} />;
 
   if (showModal)
     return (
@@ -171,7 +241,7 @@ export const CreateStory = () => {
       }
       {
         <SentenceEditorContainer>
-          {contentTrunks.map((sentence, index) => (
+          {contentTrunks.map((sentence, id) => (
             <div
               key={sentence}
               style={{
@@ -184,50 +254,23 @@ export const CreateStory = () => {
                 gap: "0.5em",
               }}
             >
-              <textarea
-                style={{
-                  border: "1px solid #ccc",
-                  padding: "10px",
-                  borderRadius: "5px",
-                  width: "100%",
-                  resize: "none",
-                }}
-                value={sentence}
-                readOnly
-                onClick={() => handleTextAreaClick()} // Attach the click handler
+              {/* Audio Area */}
+              <AudioArea
+                sentence={sentence}
+                id={id}
+                handleCreateAudioTrunk={handleCreateAudioTrunk}
+                handleTextAreaClick={handleTextAreaClick}
+                loadingAudioTrunk={loadingAudioTrunk}
               />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <img src="https://via.placeholder.com/300" alt="Image" />
-              </div>
-              <div
-                style={{
-                  border: "1px solid #ccc",
-                  borderRadius: "5px",
-                  display: "flex",
-                  flexDirection: "row",
-                }}
-              >
-                <textarea
-                  style={{
-                    border: "1px solid #ccc",
-                    padding: "10px",
-                    borderRadius: "5px",
-                    width: "100%",
-                    resize: "none",
-                  }}
-                  value={sentence}
-                />
 
-                <SecondaryButton onClick={() => handleSuggestImage(sentence)}>
-                  Refine
-                </SecondaryButton>
-              </div>
+              {/* Image Area */}
+              <ImageArea
+                id={id}
+                handleImageUpload={() => handleImageUpload(id)}
+              />
+
+              {/* Image Generation Area */}
+              <ImageGenArea sentence={sentence} />
             </div>
           ))}
         </SentenceEditorContainer>
