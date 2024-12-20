@@ -5,80 +5,12 @@ import { Input } from "@/component/Input/style.ts";
 import { EditDiv } from "@/page/create/style.ts";
 import { useNavigate } from "react-router-dom";
 import Modal from "@/component/Modal";
-import { PrimaryButton, SecondaryButton } from "@/component/BaseStyle.ts";
+import { PrimaryButton } from "@/component/BaseStyle.ts";
 import { SentenceEditorContainer } from "@/component/Editor/style.ts";
 import TextEditor from "@/component/Editor";
-import AudioPlayer from "@/component/AudioPlayer";
 import { ImageArea } from "@/page/create/imageArea.tsx";
-
-const AudioArea = ({
-  sentence,
-  id,
-  handleCreateAudioTrunk,
-  handleTextAreaClick,
-  loadingAudioTrunk,
-}) => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <AudioPlayer
-        title={""}
-        src={`${import.meta.env.VITE_API_URL}/video/${id}.mp3?t=${Date.now()}`}
-      />
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <textarea
-          style={{
-            border: "1px solid #ccc",
-            padding: "10px",
-            borderRadius: "5px",
-            width: "100%",
-            resize: "none",
-          }}
-          value={sentence}
-          readOnly
-          onClick={() => handleTextAreaClick()} // Attach the click handler
-        />
-        {loadingAudioTrunk ? (
-          <Loader />
-        ) : (
-          <SecondaryButton onClick={() => handleCreateAudioTrunk(sentence, id)}>
-            Create Audio
-          </SecondaryButton>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const ImageGenArea = ({ sentence }) => {
-  return (
-    <div
-      style={{
-        border: "1px solid #ccc",
-        borderRadius: "5px",
-        display: "flex",
-        flexDirection: "row",
-      }}
-    >
-      <textarea
-        style={{
-          border: "1px solid #ccc",
-          padding: "10px",
-          borderRadius: "5px",
-          width: "100%",
-          resize: "none",
-        }}
-        value={sentence}
-      />
-      <SecondaryButton onClick={() => {}}>Create Image</SecondaryButton>
-    </div>
-  );
-};
+import { AudioArea } from "@/page/create/audioArea.tsx";
+import { ImageGenArea } from "@/page/create/imageGenArea.tsx";
 
 export const CreateStory = () => {
   const [title, setTitle] = useState("");
@@ -264,10 +196,7 @@ export const CreateStory = () => {
               />
 
               {/* Image Area */}
-              <ImageArea
-                id={id}
-                handleImageUpload={() => handleImageUpload(id)}
-              />
+              <ImageArea id={id} />
 
               {/* Image Generation Area */}
               <ImageGenArea sentence={sentence} />
