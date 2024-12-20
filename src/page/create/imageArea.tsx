@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { SecondaryButton } from "@/component/BaseStyle.ts";
 
-export const ImageArea = ({ id }) => {
+interface IImageArea {
+  id: number;
+}
+
+export const ImageArea = ({ id }: IImageArea) => {
   const [image, setImage] = useState(
     `${import.meta.env.VITE_API_URL}/video/${id}.png?t=${Date.now()}`,
   );

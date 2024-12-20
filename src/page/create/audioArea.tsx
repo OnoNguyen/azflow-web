@@ -2,13 +2,21 @@ import AudioPlayer from "@/component/AudioPlayer";
 import { Loader } from "@/component/Loader";
 import { SecondaryButton } from "@/component/BaseStyle.ts";
 
+export interface IAudioArea {
+  sentence: string;
+  id: number;
+  handleCreateAudioTrunk: (sentence: string, id: number) => void;
+  handleTextAreaClick: () => void;
+  loadingAudioTrunk: boolean;
+}
+
 export const AudioArea = ({
   sentence,
   id,
   handleCreateAudioTrunk,
   handleTextAreaClick,
   loadingAudioTrunk,
-}) => {
+}: IAudioArea) => {
   return (
     <div
       style={{

@@ -159,7 +159,7 @@ export const EditStory = () => {
               onChange={(e) => setTranscript(e.target.value)}
             />
           ) : (
-            <SaveBtn onClick={() => {}}>Generate</SaveBtn>
+            <PrimaryButton onClick={() => {}}>Generate</PrimaryButton>
           )}
         </div>
       ))}

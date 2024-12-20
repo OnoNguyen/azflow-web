@@ -1,6 +1,10 @@
 import { SecondaryButton } from "@/component/BaseStyle.ts";
 
-export const ImageGenArea = ({ sentence }) => {
+interface IImageGenArea {
+  sentence: string;
+}
+
+export const ImageGenArea = ({ sentence }: IImageGenArea) => {
   return (
     <div
       style={{

@@ -42,22 +42,13 @@ export const CreateStory = () => {
     }
   `;
 
-  const [
-    createAudioTrunk,
-    {
-      loading: loadingAudioTrunk,
-      error: errorAudioTrunk,
-      data: dataAudioTrunk,
-    },
-  ] = useMutation(CREATE_AUDIO_TRUNK);
+  const [createAudioTrunk, { loading: loadingAudioTrunk }] =
+    useMutation(CREATE_AUDIO_TRUNK);
 
-  const [sumBook, { loading: loadingSum, error: errorSum, data: dataSum }] =
-    useMutation(SUM_BOOK);
+  const [sumBook, { data: dataSum }] = useMutation(SUM_BOOK);
 
-  const [
-    createVideoPreview,
-    { loading: loadingPreview, error: errorPreview, data: dataPreview },
-  ] = useMutation(CREATE_VIDEO_PREVIEW);
+  const [createVideoPreview, { loading: loadingPreview, data: dataPreview }] =
+    useMutation(CREATE_VIDEO_PREVIEW);
 
   const handleCreateAudioTrunk = (text: string, id: number) => {
     createAudioTrunk({
