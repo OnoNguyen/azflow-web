@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import { EditorContainer } from "@/component/Editor/style.ts";
 
 const TextEditor = ({
-  initialContent,
+  content,
   onContentChange,
   blinkIt = false, // New prop to control blinking
 }: {
-  initialContent: string;
+  content: string;
   onContentChange?: (content: string) => void;
   blinkIt?: boolean;
 }) => {
-  const [content, setContent] = useState(initialContent);
   const [wordCount, setWordCount] = useState(0);
 
   useEffect(() => {
@@ -25,7 +24,7 @@ const TextEditor = ({
   }, [content, onContentChange]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
+    onContentChange?.(e.target.value);
   };
 
   return (
@@ -38,8 +37,9 @@ const TextEditor = ({
           padding: "10px",
           borderRadius: "5px",
           width: "100%",
-          minHeight: "100px",
-          overflow: "hidden",
+          minHeight: "400px",
+          maxHeight: "1000px",
+          overflow: "auto",
         }}
         placeholder={"Start typing here..."}
       ></textarea>

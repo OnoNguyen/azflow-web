@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { SecondaryButton } from "@/component/BaseStyle.ts";
+import { ImageGenArea } from "@/page/create/imageGenArea.tsx";
 
 interface IImageArea {
   id: number;
+  sentence: string;
 }
 
-export const ImageArea = ({ id }: IImageArea) => {
+export const ImageArea = ({ id, sentence }: IImageArea) => {
   const [image, setImage] = useState(
     `${import.meta.env.VITE_API_URL}/video/${id}.png?t=${Date.now()}`,
   );
@@ -65,9 +67,10 @@ export const ImageArea = ({ id }: IImageArea) => {
         alt="Image"
         onError={() => setImage("/path/to/placeholder-image.png")} // Optional fallback
       />
+      {/* filter image extensions png, jpg and jpeg only */}
       <input
         type="file"
-        accept="image/*"
+        accept="image/png, image/jpeg, image/jpg"
         onChange={handleImageUpload}
         style={{
           display: "none",
@@ -77,6 +80,9 @@ export const ImageArea = ({ id }: IImageArea) => {
       <label htmlFor={`upload-input-${id}`}>
         <SecondaryButton as="span">Upload Image</SecondaryButton>
       </label>
+
+      {/* Image Generation Area */}
+      <ImageGenArea sentence={sentence} id={id} setImage={setImage} />
     </div>
   );
 };

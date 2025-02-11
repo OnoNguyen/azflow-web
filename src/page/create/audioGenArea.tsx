@@ -10,7 +10,7 @@ export interface IAudioArea {
   loadingAudioTrunk: boolean;
 }
 
-export const AudioArea = ({
+export const AudioGenArea = ({
   sentence,
   id,
   handleCreateAudioTrunk,

@@ -9,8 +9,7 @@ import { PrimaryButton } from "@/component/BaseStyle.ts";
 import { SentenceEditorContainer } from "@/component/Editor/style.ts";
 import TextEditor from "@/component/Editor";
 import { ImageArea } from "@/page/create/imageArea.tsx";
-import { AudioArea } from "@/page/create/audioArea.tsx";
-import { ImageGenArea } from "@/page/create/imageGenArea.tsx";
+import { AudioGenArea } from "@/page/create/audioGenArea.tsx";
 
 export const CreateStory = () => {
   const [title, setTitle] = useState("");
@@ -36,6 +35,20 @@ export const CreateStory = () => {
     }
   `;
 
+  const GENERATE_ALL_IMAGES = gql`
+    mutation createAllImages($input: [ImagePromptInput!]!) {
+      generateAllImages(input: $input)
+    }
+  `;
+
+  const GENERATE_ALL_AUDIOS = gql`
+    mutation createAllAudios($input: [AudioInput!]!) {
+      createAllAudios(input: $input) {
+        id
+      }
+    }
+  `;
+
   const SUM_BOOK = gql`
     mutation createBookSummary($title: String!) {
       createBookSummary(input: { title: $title })
@@ -45,10 +58,41 @@ export const CreateStory = () => {
   const [createAudioTrunk, { loading: loadingAudioTrunk }] =
     useMutation(CREATE_AUDIO_TRUNK);
 
-  const [sumBook, { data: dataSum }] = useMutation(SUM_BOOK);
+  const [generateAllImages, { loading: loadingImages, data: dataImages }] =
+    useMutation(GENERATE_ALL_IMAGES);
+
+  const [generateAllAudios, { loading: loadingAudios, data: dataAudios }] =
+    useMutation(GENERATE_ALL_AUDIOS);
+
+  const [sumBook, { loading: loadingSum, data: dataSum }] =
+    useMutation(SUM_BOOK);
 
   const [createVideoPreview, { loading: loadingPreview, data: dataPreview }] =
     useMutation(CREATE_VIDEO_PREVIEW);
+
+  const handleCreateAllImages = () => {
+    // generate input for generateAllImages in the form of an array of {prompt: string} objects
+    const contentTrunksObj = contentTrunks.map((sentence) => {
+      return { prompt: sentence };
+    });
+    console.log("contentTrunksObj:", contentTrunksObj);
+    // call generateAllImages mutation
+    generateAllImages({
+      variables: { input: contentTrunksObj },
+    }).catch((e) => console.error("generateAllImages error:", e));
+  };
+
+  const handleCreateAllAudios = () => {
+    // generate input for generateAllImages in the form of an array of {prompt: string} objects
+    const audioPromptObjs = contentTrunks.map((sentence) => {
+      return { text: sentence, voice: "", title: "" };
+    });
+    console.log("audioPromptObjs:", audioPromptObjs);
+    // call generateAllImages mutation
+    generateAllAudios({
+      variables: { input: audioPromptObjs },
+    }).catch((e) => console.error("generateAllImages error:", e));
+  };
 
   const handleCreateAudioTrunk = (text: string, id: number) => {
     createAudioTrunk({
@@ -62,10 +106,20 @@ export const CreateStory = () => {
     }).catch((e) => console.error("createPreview error:", e));
   };
 
-  const handleGen = (title: string) => {
-    sumBook({
-      variables: { title: title },
-    }).catch((e) => console.error("summarise book error:", e));
+  const handleGen = async (title: string) => {
+    try {
+      const response = await sumBook({ variables: { title: title } });
+      if (response.data?.createBookSummary) {
+        // Update storyContent with the generated book summary
+        console.log(
+          "response.data.createBookSummary:",
+          response.data.createBookSummary,
+        );
+        setStoryContent(response.data.createBookSummary);
+      }
+    } catch (e) {
+      console.error("sumBook error:", e);
+    }
   };
 
   const handleModalClose = () => {
@@ -118,19 +172,69 @@ export const CreateStory = () => {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter title and author, e.g: Outliers by Malcolm Gladwell"
           />
-          <PrimaryButton onClick={() => handleGen(title)}>
-            Generate
-          </PrimaryButton>
+          {loadingSum ? (
+            <Loader />
+          ) : (
+            <PrimaryButton onClick={() => handleGen(title)}>
+              Generate
+            </PrimaryButton>
+          )}
         </EditDiv>
       }
       {
         <EditDiv>
           <TextEditor
-            initialContent={dataSum?.createBookSummary || ""}
+            content={storyContent}
             onContentChange={setStoryContent}
             blinkIt={blink}
           />
         </EditDiv>
+      }
+      {
+        <div style={{ display: "flex", gap: "0.5em" }}>
+          <PrimaryButton
+            onClick={handleCreateAllAudios}
+            disabled={contentTrunks.length === 0}
+          >
+            Generate All Audios
+          </PrimaryButton>
+          <PrimaryButton
+            onClick={handleCreateAllImages}
+            disabled={contentTrunks.length === 0}
+          >
+            Generate All Images
+          </PrimaryButton>
+        </div>
+      }
+      {
+        <SentenceEditorContainer>
+          {contentTrunks.map((sentence, id) => (
+            <div
+              key={`${sentence}-${id}`}
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                padding: "10px",
+                minWidth: "340px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5em",
+              }}
+            >
+              {/* Audio Area */}
+              <AudioGenArea
+                sentence={sentence}
+                id={id}
+                handleCreateAudioTrunk={handleCreateAudioTrunk}
+                handleTextAreaClick={handleTextAreaClick}
+                loadingAudioTrunk={loadingAudioTrunk}
+              />
+
+              {/* Image Area */}
+              <ImageArea id={id} sentence={sentence} />
+            </div>
+          ))}
+        </SentenceEditorContainer>
       }
       {
         // video preview div
@@ -143,10 +247,22 @@ export const CreateStory = () => {
           }}
         >
           {previewReady && dataPreview ? (
-            <video controls style={{ maxWidth: "430px", maxHeight: "920px" }}>
-              <source src={dataPreview.createVideoPreview} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "0.5em",
+              }}
+            >
+              <video controls style={{ maxWidth: "430px", maxHeight: "920px" }}>
+                <source src={dataPreview.createVideoPreview} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <PrimaryButton onClick={() => setShowModal(true)}>
+                Save
+              </PrimaryButton>
+            </div>
           ) : loadingPreview ? (
             <Loader />
           ) : (
@@ -161,39 +277,6 @@ export const CreateStory = () => {
             </PrimaryButton>
           )}
         </div>
-      }
-      {
-        <SentenceEditorContainer>
-          {contentTrunks.map((sentence, id) => (
-            <div
-              key={sentence}
-              style={{
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                padding: "10px",
-                minWidth: "340px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.5em",
-              }}
-            >
-              {/* Audio Area */}
-              <AudioArea
-                sentence={sentence}
-                id={id}
-                handleCreateAudioTrunk={handleCreateAudioTrunk}
-                handleTextAreaClick={handleTextAreaClick}
-                loadingAudioTrunk={loadingAudioTrunk}
-              />
-
-              {/* Image Area */}
-              <ImageArea id={id} />
-
-              {/* Image Generation Area */}
-              <ImageGenArea sentence={sentence} />
-            </div>
-          ))}
-        </SentenceEditorContainer>
       }
     </div>
   );
