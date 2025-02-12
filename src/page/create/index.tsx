@@ -67,8 +67,10 @@ export const CreateStory = () => {
   const [sumBook, { loading: loadingSum, data: dataSum }] =
     useMutation(SUM_BOOK);
 
-  const [createVideoPreview, { loading: loadingPreview, data: dataPreview }] =
-    useMutation(CREATE_VIDEO_PREVIEW);
+  const [
+    createVideoPreview,
+    { loading: loadingPreview, data: dataPreview, error: errorPreview },
+  ] = useMutation(CREATE_VIDEO_PREVIEW);
 
   const handleCreateAllImages = () => {
     // generate input for generateAllImages in the form of an array of {prompt: string} objects
@@ -255,7 +257,14 @@ export const CreateStory = () => {
                 gap: "0.5em",
               }}
             >
-              <video controls style={{ maxWidth: "430px", maxHeight: "920px" }}>
+              <video
+                controls
+                style={{ maxWidth: "430px", maxHeight: "920px" }}
+                onError={() => {
+                  alert("Video generation error. Please try again");
+                  setPreviewReady(false);
+                }}
+              >
                 <source src={dataPreview.createVideoPreview} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
