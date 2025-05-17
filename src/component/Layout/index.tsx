@@ -1,25 +1,17 @@
-import {
-  Footer,
-  HeaderBar,
-  LogoText,
-  Main,
-  Nav,
-  NavList,
-  Wrapper,
-} from "./style";
-import { Link, Outlet } from "react-router-dom";
-import { CreateButtonWrapper } from "@/component/Create";
-import { Search } from "@/component/Search";
-import { Login } from "@/component/Login";
+import {Footer, HeaderBar, LogoText, Main, Nav, NavList, Wrapper,} from "./style";
+import {Link, Outlet} from "react-router-dom";
+import {CreateButtonWrapper} from "@/component/Create";
+import {Search} from "@/component/Search";
+import {Login} from "@/component/Login";
 
 export const PrimaryLayout = () => {
   return (
     <Wrapper>
       <HeaderBar>
         <LogoText>AzFlow</LogoText>
-        <Search />
-        <CreateButtonWrapper />
-        <Login />
+        <Search/>
+        <CreateButtonWrapper/>
+        <Login/>
       </HeaderBar>
       <Nav>
         <NavList>
@@ -36,9 +28,9 @@ export const PrimaryLayout = () => {
             </Link>
           </li>
           <li>
-            <Link to="/">
+            <Link to="/predict">
               <span className="material-symbols-outlined">group</span>
-              <span>Them</span>
+              <span>Predict</span>
             </Link>
           </li>
           <li>
@@ -50,7 +42,7 @@ export const PrimaryLayout = () => {
         </NavList>
       </Nav>
       <Main>
-        <Outlet />
+        <Outlet/>
       </Main>
       <Footer>AzFlow inc</Footer>
     </Wrapper>
@@ -62,7 +54,7 @@ export const StudioLayout = () => {
     <Wrapper>
       <HeaderBar>
         <LogoText>AzFlow</LogoText>
-        <Login />
+        <Login/>
       </HeaderBar>
       <Nav>
         <NavList>
@@ -93,7 +85,7 @@ export const StudioLayout = () => {
         </NavList>
       </Nav>
       <Main>
-        <Outlet />
+        <Outlet/>
       </Main>
       <Footer>AzFlow inc</Footer>
     </Wrapper>
