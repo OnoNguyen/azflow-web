@@ -11,6 +11,10 @@ export const Predict = () => {
   const [responseMsg, setResponseMsg] = useState('');
   const [manualTeam1, setManualTeam1] = useState(false);
   const [manualTeam2, setManualTeam2] = useState(false);
+  const [boOption, setBoOption] = useState('bo1');
+  const [team1Odds, setTeam1Odds] = useState('');
+  const [tieOdds, setTieOdds] = useState('');
+  const [team2Odds, setTeam2Odds] = useState('');
 
   const env = import.meta.env;
 
@@ -42,6 +46,10 @@ export const Predict = () => {
         team_2_id: Number(team2.id),
         team_2_name: team2.name,
         match_date: matchDate,
+        bo: boOption,
+        team_1_odds: team1Odds,
+        tie_odds: tieOdds,
+        team_2_odds: team2Odds
       };
       const res = await axios.post(`${env.VITE_DOTA_API}/predict`, payload);
       setResponseMsg(`Prediction result: ${res.data.message || 'Success'}`);
@@ -158,7 +166,69 @@ export const Predict = () => {
           onChange={(e) => setMatchDate(e.target.value)}
         />
       </div>
+      <div>
+        <label>Best of:</label>
+        <label>
+          <input
+            type="radio"
+            value="bo1"
+            checked={boOption === 'bo1'}
+            onChange={(e) => setBoOption(e.target.value)}
+          />
+          BO1
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="bo2"
+            checked={boOption === 'bo2'}
+            onChange={(e) => setBoOption(e.target.value)}
+          />
+          BO2
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="bo3"
+            checked={boOption === 'bo3'}
+            onChange={(e) => setBoOption(e.target.value)}
+          />
+          BO3
+        </label>
+      </div>
+      <div>
+        <label>Team 1 Best Odds:</label>
+        <input
+          type="number"
+          step="0.01"
+          value={team1Odds}
+          onChange={(e) => setTeam1Odds(e.target.value)}
+          placeholder="e.g. 1.85"
+        />
+      </div>
 
+      <div>
+        <label>Tie Best Odds:</label>
+        <input
+          type="number"
+          step="0.01"
+          value={tieOdds}
+          onChange={(e) => setTieOdds(e.target.value)}
+          disabled={boOption !== 'bo2'}
+          placeholder="e.g. 2.30"
+        />
+      </div>
+
+      <div>
+        <label>Team 2 Best Odds:</label>
+        <input
+          type="number"
+          step="0.01"
+          value={team2Odds}
+          onChange={(e) => setTeam2Odds(e.target.value)}
+          placeholder="e.g. 1.95"
+        />
+      </div>
       <button onClick={handleSubmit}>Submit</button>
 
       <div>{responseMsg}</div>
