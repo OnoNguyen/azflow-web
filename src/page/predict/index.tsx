@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
 export const Predict = () => {
@@ -8,7 +8,7 @@ export const Predict = () => {
   const [team1, setTeam1] = useState({name: '', id: ''});
   const [team2, setTeam2] = useState({name: '', id: ''});
   const [matchDate, setMatchDate] = useState(new Date().toISOString().split('T')[0]);
-  const [responseMsg, setResponseMsg] = useState('');
+  const [responseData, setResponseData] = useState({});
   const [manualTeam1, setManualTeam1] = useState(false);
   const [manualTeam2, setManualTeam2] = useState(false);
   const [boOption, setBoOption] = useState('bo1');
@@ -52,9 +52,9 @@ export const Predict = () => {
         team_2_odds: team2Odds
       };
       const res = await axios.post(`${env.VITE_DOTA_API}/predict`, payload);
-      setResponseMsg(`Prediction result: ${res.data.message || 'Success'}`);
+      setResponseData(res.data);
     } catch (err) {
-      setResponseMsg(`Error: ${err.response?.data?.message || err.message}`);
+      setResponseData({"error": err.response?.data?.message || err.message});
     }
   };
 
@@ -231,7 +231,64 @@ export const Predict = () => {
       </div>
       <button onClick={handleSubmit}>Submit</button>
 
-      <div>{responseMsg}</div>
+      <PredictResult responseData={responseData} team1={team1} team2={team2}/>
+
     </div>
+  );
+};
+
+type PredictResultProps = {
+  responseData: Record<string, any>;
+  team1: { name: string };
+  team2: { name: string };
+};
+
+const PredictResult: React.FC<PredictResultProps> = ({responseData, team1, team2}) => {
+  const {
+    error,
+    team_1_winning_prob,
+    team_2_winning_prob,
+    team_1_fraction,
+    team_2_fraction,
+    tie_fraction,
+    team_1_fair_odds,
+    team_2_fair_odds,
+    tie_fair_odds,
+    vig,
+  } = responseData;
+
+  const t1WP = Number(team_1_winning_prob);
+  const t2WP = Number(team_2_winning_prob);
+  const t1F = Number(team_1_fraction);
+  const t2F = Number(team_2_fraction);
+  const tieF = Number(tie_fraction);
+  const t1FO = Number(team_1_fair_odds);
+  const t2FO = Number(team_2_fair_odds);
+  const tieFO = Number(tie_fair_odds);
+  const v = Number(vig);
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  return (
+    <>
+      <div>
+        {team1.name} ({(t1WP * 100).toFixed(2)}%) vs {team2.name} ({(t2WP * 100).toFixed(2)}%)
+      </div>
+      <div>
+        {team1.name} fraction: {(t1F * 100).toFixed(2)}, fair prob: {(t1FO * 100).toFixed(2)}%, fair
+        odds: {(1 / t1FO).toFixed(2)}
+      </div>
+      <div>
+        Tie fraction: {(tieF * 100).toFixed(2)}, fair prob: {(tieFO * 100).toFixed(2)}%, fair
+        odds: {(1 / tieFO).toFixed(2)}
+      </div>
+      <div>
+        {team2.name} fraction: {(t2F * 100).toFixed(2)}%, fair prob: {(t2FO * 100).toFixed(2)}%, fair
+        odds: {(1 / t2FO).toFixed(2)}
+      </div>
+      <div>Vig: {(v * 100).toFixed(2)}%</div>
+    </>
   );
 };
